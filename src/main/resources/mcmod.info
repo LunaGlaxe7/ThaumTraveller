@@ -1,0 +1,21 @@
+[
+{
+  "modid": "${modId}",
+  "name": "${modName}",
+  "description": "An addon to Thaumcraft 4, implementing new content.",
+  "version": "${modVersion}",
+  "mcversion": "${minecraftVersion}",
+  "logoFile": ,
+  "url": "minecraftforum.net/topic/1813058-",
+  "updateUrl": "",
+  "authors": [
+
+  ],
+  "credits": "Azanor, .",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": [
+    "Thaumcraft"
+  ]
+}
+]
