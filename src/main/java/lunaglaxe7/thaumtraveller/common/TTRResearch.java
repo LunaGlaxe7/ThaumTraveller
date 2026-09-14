@@ -48,6 +48,7 @@ public class TTRResearch {
                         .setPages(
                                 new ResearchPage("tc.research_page.BEANTRANS"),
                                 new ResearchPage((CrucibleRecipe) recipes.get("BeanTrans")))
+                        .setItemTriggers(ItemApi.getItem("itemManaBean",0)) //now the research will be unlocked after scan the manabean
                         .registerResearchItem();
     }
 
