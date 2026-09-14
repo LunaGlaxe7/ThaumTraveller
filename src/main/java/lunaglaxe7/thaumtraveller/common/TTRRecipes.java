@@ -108,7 +108,7 @@ public class TTRRecipes {
                             CompatItems.voidSeed,
                             3,
                             new AspectList().add(Aspect.ELDRITCH, 16).add(Aspect.DARKNESS, 16).add(Aspect.CROP, 32),
-                            new ItemStack(GameRegistry.findItem(TTRContents.TCID, "itemResource"), 1, 17),
+                            new ItemStack(GameRegistry.findItem(TTRContents.TCID, "ItemResource"), 1, 17),
                             seeds[i]));
         }
 

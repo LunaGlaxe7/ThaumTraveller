@@ -26,6 +26,8 @@ dependencies {
 
     // For testing purposes
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Electro-Magic-Tools:1.7.24:dev")
+    runtimeOnlyNonPublishable('com.github.GTNewHorizons:DummyCore:1.21.0:dev')
+    runtimeOnlyNonPublishable('com.github.GTNewHorizons:ThaumicBases:1.9.0:dev'){transitive=false}
     runtimeOnlyNonPublishable('com.github.GTNewHorizons:Galacticraft:3.4.33-GTNH:dev'){transitive=false}
     runtimeOnlyNonPublishable('com.github.GTNewHorizons:TinkersConstruct:1.14.97-GTNH:dev')
     runtimeOnlyNonPublishable('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1054-GTNH:dev') {transitive=false}

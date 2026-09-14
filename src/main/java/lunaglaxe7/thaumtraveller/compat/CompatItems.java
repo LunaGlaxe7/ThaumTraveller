@@ -85,6 +85,6 @@ public class CompatItems {
     }
 
     public static void importTBItems() {
-        voidSeed = new ItemStack(GameRegistry.findItem("thaumicbases", "item.voidSeed"), 1, 0);
+        voidSeed = new ItemStack(GameRegistry.findItem("thaumicbases", "voidSeed"), 1, 0);
     }
 }
