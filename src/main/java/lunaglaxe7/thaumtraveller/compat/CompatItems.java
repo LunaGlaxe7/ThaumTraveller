@@ -1,4 +1,4 @@
-package lunaglaxe7.thaumtraveller.items;
+package lunaglaxe7.thaumtraveller.compat;
 
 import net.minecraft.item.ItemStack;
 
@@ -40,6 +40,9 @@ public class CompatItems {
     public static ItemStack certus;
     public static ItemStack certusCharged;
 
+    // items from thaumic bases
+    public static ItemStack voidSeed;
+
     public static void importGCItems() {
         fallenMeteor = new ItemStack(GameRegistry.findItem("GalacticraftCore", "tile.fallenMeteor"));
         ingotMeteo = new ItemStack(GameRegistry.findItem("GalacticraftCore", "item.meteoricIronIngot"));
@@ -79,5 +82,9 @@ public class CompatItems {
     public static void importAEItems() {
         certus = new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 0);
         certusCharged = new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 1);
+    }
+
+    public static void importTBItems() {
+        voidSeed = new ItemStack(GameRegistry.findItem("thaumicbases", "item.voidSeed"), 1, 0);
     }
 }

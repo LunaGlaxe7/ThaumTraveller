@@ -1,10 +1,12 @@
-package lunaglaxe7.thaumtraveller;
+package lunaglaxe7.thaumtraveller.common;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.ShapedRecipes;
 
-import lunaglaxe7.thaumtraveller.items.CompatItems;
+import cpw.mods.fml.common.registry.GameRegistry;
+import lunaglaxe7.thaumtraveller.compat.CompatItems;
 import lunaglaxe7.thaumtraveller.items.ItemManaBeanHelper;
 import lunaglaxe7.thaumtraveller.items.ItemNugget;
 import thaumcraft.api.ThaumcraftApi;
@@ -23,7 +25,7 @@ public class TTRRecipes {
             for (Aspect aspectBean : aspects) {
                 if (aspectBean.getTag().equals(aspectNeed.getTag())) continue;
                 ThaumcraftApi.addCrucibleRecipe(
-                        "BEANTRANS",
+                        "TTR.BEANTRANS",
                         ItemManaBeanHelper.beanWithAspect(aspectNeed),
                         ItemManaBeanHelper.beanWithAspect(aspectBean),
                         new AspectList().add(Aspect.ENTROPY, 2).add(aspectNeed, 1));
@@ -32,7 +34,7 @@ public class TTRRecipes {
         TTRResearch.recipes.put(
                 "BeanTrans",
                 new CrucibleRecipe(
-                        "BEANTRANS",
+                        "TTR.BEANTRANS",
                         ItemManaBeanHelper.beanWithAspect(Aspect.WATER),
                         ItemManaBeanHelper.beanWithAspect(Aspect.AIR),
                         new AspectList().add(Aspect.ENTROPY, 2).add(Aspect.WATER, 1)));
@@ -51,7 +53,7 @@ public class TTRRecipes {
         TTRResearch.recipes.put(
                 "nuggetMeteoricIronTransiron",
                 ThaumcraftApi.addCrucibleRecipe(
-                        "TRANSIRON_METEO",
+                        "TTR.TRANSIRON_METEO",
                         new ItemStack(ItemNugget.meteoricIron, 3),
                         "nuggetMeteoricIron",
                         new AspectList().add(Aspect.METAL, 2).add(Aspect.FIRE, 2).add(Aspect.ENTROPY, 2)));
@@ -61,10 +63,55 @@ public class TTRRecipes {
         TTRResearch.recipes.put(
                 "certusCharge",
                 ThaumcraftApi.addCrucibleRecipe(
-                        "CHARGE_CERTUS",
+                        "TTR.CHARGE_CERTUS",
                         CompatItems.certusCharged,
                         CompatItems.certus,
                         new AspectList().add(Aspect.ENERGY, 3)));
+    }
+
+    public static void addRecipesTB() {
+        ItemStack[] wheat = new ItemStack[6];
+        for (int i = 0; i < 6; i++) {
+            wheat[i] = new ItemStack(Items.wheat_seeds, 1, 0);
+        }
+        ItemStack[] carrot = new ItemStack[6];
+        for (int i = 0; i < 6; i++) {
+            carrot[i] = new ItemStack(Items.carrot, 1, 0);
+        }
+        ItemStack[] melon = new ItemStack[6];
+        for (int i = 0; i < 6; i++) {
+            melon[i] = new ItemStack(Items.melon_seeds, 1, 0);
+        }
+        ItemStack[] potato1 = new ItemStack[6];
+        for (int i = 0; i < 6; i++) {
+            potato1[i] = new ItemStack(Items.potato, 1, 0);
+        }
+        ItemStack[] potato2 = new ItemStack[6];
+        for (int i = 0; i < 6; i++) {
+            potato2[i] = new ItemStack(Items.poisonous_potato, 1, 0);
+        }
+        ItemStack[] wart = new ItemStack[6];
+        for (int i = 0; i < 6; i++) {
+            wart[i] = new ItemStack(Items.nether_wart, 1, 0);
+        }
+        ItemStack[] pumpkin = new ItemStack[6];
+        for (int i = 0; i < 6; i++) {
+            pumpkin[i] = new ItemStack(Items.pumpkin_seeds, 1, 0);
+        }
+        ItemStack[][] seeds = new ItemStack[][] { wheat, carrot, melon, potato1, potato2, wart, pumpkin };
+
+        for (int i = 0; i < 7; i++) {
+            TTRResearch.recipes.put(
+                    "voidSeed" + i,
+                    ThaumcraftApi.addInfusionCraftingRecipe(
+                            "TTR.VOIDSEED",
+                            CompatItems.voidSeed,
+                            3,
+                            new AspectList().add(Aspect.ELDRITCH, 16).add(Aspect.DARKNESS, 16).add(Aspect.CROP, 32),
+                            new ItemStack(GameRegistry.findItem(TTRContents.TCID, "itemResource"), 1, 17),
+                            seeds[i]));
+        }
+
     }
 
     private static void addShapelessWithResearch(String tag, ItemStack out, ItemStack[] in) {

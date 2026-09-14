@@ -2,16 +2,16 @@
  * This document is created by <lunaglaxe7>. I recreate it from decompile of ThaumTraveller.class because the origin
  * ThaumTraveller.java by lunaglaxe7 at 2021 has lost.
  */
-package lunaglaxe7.thaumtraveller;
+package lunaglaxe7.thaumtraveller.common;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import lunaglaxe7.thaumtraveller.common.CommonProxy;
+import lunaglaxe7.thaumtraveller.Config;
 import lunaglaxe7.thaumtraveller.compat.Compat;
-import lunaglaxe7.thaumtraveller.items.CompatItems;
+import lunaglaxe7.thaumtraveller.compat.CompatItems;
 import lunaglaxe7.thaumtraveller.items.ItemNugget;
 import lunaglaxe7.thaumtraveller.items.TTRItems;
 
@@ -20,7 +20,7 @@ import lunaglaxe7.thaumtraveller.items.TTRItems;
         name = "ThaumTraveller",
         dependencies = "required-after:Thaumcraft;after:GalacticraftCore;"
                 + "after:GrimoireOfGaia;after:ForbiddenMagic;"
-                + "after:appliedenergistics2")
+                + "after:appliedenergistics2;after:thaumicbases")
 public class ThaumTraveller {
 
     @Mod.Instance(value = "ThaumTraveller")
@@ -66,6 +66,11 @@ public class ThaumTraveller {
             CompatItems.importAEItems();
             TTRRecipes.addRecipesAE();
             TTRResearch.addResearchAE();
+        }
+        if (Compat.tb) {
+            CompatItems.importTBItems();
+            TTRRecipes.addRecipesTB();
+            TTRResearch.addResearchTB();
         }
         proxy.postInit(event);
     }

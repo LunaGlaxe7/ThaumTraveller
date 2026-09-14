@@ -1,4 +1,4 @@
-package lunaglaxe7.thaumtraveller;
+package lunaglaxe7.thaumtraveller.common;
 
 import net.minecraft.util.ResourceLocation;
 

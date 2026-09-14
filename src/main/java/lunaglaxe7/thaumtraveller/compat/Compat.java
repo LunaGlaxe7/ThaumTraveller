@@ -8,8 +8,7 @@ import cpw.mods.fml.common.Loader;
 import fox.spiteful.forbidden.DarkAspects;
 import lunaglaxe7.thaumtraveller.Config;
 import lunaglaxe7.thaumtraveller.LogHandler;
-import lunaglaxe7.thaumtraveller.TravelAspects;
-import lunaglaxe7.thaumtraveller.items.CompatItems;
+import lunaglaxe7.thaumtraveller.common.TravelAspects;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
@@ -23,6 +22,7 @@ public class Compat {
     public static boolean gaia = false;
     public static boolean fm = false;
     public static boolean ae2 = false;
+    public static boolean tb = false;
     public static AspectList list;
 
     public static void initiate() {
@@ -33,6 +33,7 @@ public class Compat {
         gaia = Config.gaia && Loader.isModLoaded("GrimoireOfGaia");
         fm = Loader.isModLoaded("ForbiddenMagic");
         ae2 = Loader.isModLoaded("appliedenergistics2");
+        tb = Loader.isModLoaded("thaumicbases");
     }
 
     // regist aspects for items and mobs from Galacticraft, not all of them
