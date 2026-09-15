@@ -5,6 +5,9 @@ import java.util.List;
 
 import net.minecraft.item.Item;
 
+import cpw.mods.fml.common.Optional;
+import lunaglaxe7.thaumtraveller.common.TTRContents;
+
 public class ItemNugget extends Item {
 
     public static List<ItemNugget> nuggets = new ArrayList<ItemNugget>();
@@ -17,6 +20,11 @@ public class ItemNugget extends Item {
         nuggets.add(this);
     }
 
+    public static void addNuggets() {
+        addNuggetsGC();
+    }
+
+    @Optional.Method(modid = TTRContents.GCID)
     public static void addNuggetsGC() {
         meteoricIron = new ItemNugget("MeteoricIron");
     }

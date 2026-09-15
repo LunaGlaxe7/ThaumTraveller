@@ -5,7 +5,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.ShapedRecipes;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
+import lunaglaxe7.thaumtraveller.Config;
 import lunaglaxe7.thaumtraveller.compat.CompatItems;
 import lunaglaxe7.thaumtraveller.items.ItemManaBeanHelper;
 import lunaglaxe7.thaumtraveller.items.ItemNugget;
@@ -19,6 +21,16 @@ public class TTRRecipes {
     public static CraftingManager cm = CraftingManager.getInstance();
 
     public static void addRecipes() {
+        addRecipesBasic();
+
+        if (Config.crossMod) {
+            addRecipesGC();
+            addRecipesAE();
+            addRecipesTB();
+        }
+    }
+
+    public static void addRecipesBasic() {
         Aspect[] aspects;
         for (Aspect aspectNeed : aspects = new AspectList().add(Aspect.AIR, 1).add(Aspect.WATER, 1).add(Aspect.FIRE, 1)
                 .add(Aspect.EARTH, 1).add(Aspect.ORDER, 1).add(Aspect.ENTROPY, 1).getAspects()) {
@@ -40,6 +52,7 @@ public class TTRRecipes {
                         new AspectList().add(Aspect.ENTROPY, 2).add(Aspect.WATER, 1)));
     }
 
+    @Optional.Method(modid = TTRContents.GCID)
     public static void addRecipesGC() {
         cm.addShapelessRecipe(new ItemStack(ItemNugget.meteoricIron, 9), CompatItems.ingotMeteo);
         cm.addRecipe(CompatItems.ingotMeteo, "###", "###", "###", '#', new ItemStack(ItemNugget.meteoricIron));
@@ -59,6 +72,7 @@ public class TTRRecipes {
                         new AspectList().add(Aspect.METAL, 2).add(Aspect.FIRE, 2).add(Aspect.ENTROPY, 2)));
     }
 
+    @Optional.Method(modid = TTRContents.AEID)
     public static void addRecipesAE() {
         TTRResearch.recipes.put(
                 "certusCharge",
@@ -69,6 +83,7 @@ public class TTRRecipes {
                         new AspectList().add(Aspect.ENERGY, 3)));
     }
 
+    @Optional.Method(modid = TTRContents.TBID)
     public static void addRecipesTB() {
         ItemStack[] wheat = new ItemStack[6];
         for (int i = 0; i < 6; i++) {

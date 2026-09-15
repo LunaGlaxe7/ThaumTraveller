@@ -18,9 +18,8 @@ import lunaglaxe7.thaumtraveller.items.TTRItems;
 @Mod(
         modid = "ThaumTraveller",
         name = "ThaumTraveller",
-        dependencies = "required-after:Thaumcraft;after:GalacticraftCore;"
-                + "after:GrimoireOfGaia;after:ForbiddenMagic;"
-                + "after:appliedenergistics2;after:thaumicbases")
+        dependencies = "required-after:Thaumcraft;after:GalacticraftCore;" + // "after:GrimoireOfGaia;" +
+                "after:ForbiddenMagic;" + "after:appliedenergistics2;after:thaumicbases")
 public class ThaumTraveller {
 
     @Mod.Instance(value = "ThaumTraveller")
@@ -34,10 +33,8 @@ public class ThaumTraveller {
     public void preInit(FMLPreInitializationEvent event) {
         instance = this;
         Config.configurate(event.getSuggestedConfigurationFile());
-        Compat.initiate();
-        if (Compat.gc) {
-            ItemNugget.addNuggetsGC();
-        }
+        // Compat.initiate();
+        ItemNugget.addNuggets();
         TTRItems.itemRegister(event);
         TravelAspects.initAspects();
         proxy.preInit(event);
@@ -50,28 +47,30 @@ public class ThaumTraveller {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        CompatItems.importItems();
         TravelAspects.addAspects();
+        Compat.compatify();
         TTRRecipes.addRecipes();
         TTRResearch.addResearch();
-        if (Compat.gc) {
-            CompatItems.importGCItems();
-            Compat.compatifyGC();
-            TTRRecipes.addRecipesGC();
-            TTRResearch.addResearchGC();
-        }
-        if (Compat.gaia) {
-            Compat.compatifyGaia();
-        }
-        if (Compat.ae2) {
-            CompatItems.importAEItems();
-            TTRRecipes.addRecipesAE();
-            TTRResearch.addResearchAE();
-        }
-        if (Compat.tb) {
-            CompatItems.importTBItems();
-            TTRRecipes.addRecipesTB();
-            TTRResearch.addResearchTB();
-        }
+        // if (Compat.gc) {
+        // CompatItems.importGCItems();
+        // Compat.compatifyGC();
+        // TTRRecipes.addRecipesGC();
+        // TTRResearch.addResearchGC();
+        // }
+        // if (Compat.gaia) {
+        // Compat.compatifyGaia();
+        // }
+        // if (Compat.ae2) {
+        // CompatItems.importAEItems();
+        // TTRRecipes.addRecipesAE();
+        // TTRResearch.addResearchAE();
+        // }
+        // if (Compat.tb) {
+        // CompatItems.importTBItems();
+        // TTRRecipes.addRecipesTB();
+        // TTRResearch.addResearchTB();
+        // }
         proxy.postInit(event);
     }
 }

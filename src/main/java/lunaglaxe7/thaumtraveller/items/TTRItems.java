@@ -1,10 +1,10 @@
 package lunaglaxe7.thaumtraveller.items;
 
-import net.minecraft.item.Item;
 import net.minecraftforge.oredict.OreDictionary;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import lunaglaxe7.thaumtraveller.common.TTRContents;
 
 // regist items of thaumtraveller
 public class TTRItems {
@@ -16,10 +16,10 @@ public class TTRItems {
             return;
         }
         for (ItemNugget nugget : ItemNugget.nuggets) {
-            GameRegistry.registerItem((Item) nugget, (String) nugget.name, (String) "ThaumTraveller");
-            isOreDicRegisted = OreDictionary.doesOreNameExist((String) nugget.name);
+            GameRegistry.registerItem(nugget, nugget.name, TTRContents.MODID);
+            isOreDicRegisted = OreDictionary.doesOreNameExist(nugget.name);
             if (isOreDicRegisted) continue;
-            OreDictionary.registerOre((String) nugget.name, (Item) nugget);
+            OreDictionary.registerOre(nugget.name, nugget);
         }
     }
 }

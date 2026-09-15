@@ -2,7 +2,10 @@ package lunaglaxe7.thaumtraveller.compat;
 
 import net.minecraft.item.ItemStack;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
+import lunaglaxe7.thaumtraveller.Config;
+import lunaglaxe7.thaumtraveller.common.TTRContents;
 
 // Items from other mods, to simplify codes
 public class CompatItems {
@@ -43,6 +46,15 @@ public class CompatItems {
     // items from thaumic bases
     public static ItemStack voidSeed;
 
+    public static void importItems() {
+        if (Config.crossMod) {
+            importGCItems();
+            importAEItems();
+            importTBItems();
+        }
+    }
+
+    @Optional.Method(modid = TTRContents.GCID)
     public static void importGCItems() {
         fallenMeteor = new ItemStack(GameRegistry.findItem("GalacticraftCore", "tile.fallenMeteor"));
         ingotMeteo = new ItemStack(GameRegistry.findItem("GalacticraftCore", "item.meteoricIronIngot"));
@@ -79,11 +91,13 @@ public class CompatItems {
         oreCheese = new ItemStack(GameRegistry.findItem("GalacticraftCore", "tile.moonBlock"), 1, 2);
     }
 
+    @Optional.Method(modid = TTRContents.AEID)
     public static void importAEItems() {
         certus = new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 0);
         certusCharged = new ItemStack(GameRegistry.findItem("appliedenergistics2", "item.ItemMultiMaterial"), 1, 1);
     }
 
+    @Optional.Method(modid = TTRContents.TBID)
     public static void importTBItems() {
         voidSeed = new ItemStack(GameRegistry.findItem("thaumicbases", "voidSeed"), 1, 0);
     }

@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 
+import cpw.mods.fml.common.Optional;
+import lunaglaxe7.thaumtraveller.Config;
 import lunaglaxe7.thaumtraveller.compat.CompatItems;
 import lunaglaxe7.thaumtraveller.items.ItemNugget;
 import thaumcraft.api.ItemApi;
@@ -23,6 +25,15 @@ public class TTRResearch {
     public static HashMap recipes = new HashMap();
 
     public static void addResearch() {
+        addResearchBasic();
+        if (Config.crossMod) {
+            addResearchGC();
+            addResearchAE();
+            addResearchTB();
+        }
+    }
+
+    public static void addResearchBasic() {
         ResearchCategories.registerCategory(
                 "TTRUniverse",
                 new ResourceLocation("textures/items/leather_boots.png"),
@@ -53,6 +64,7 @@ public class TTRResearch {
                         .registerResearchItem();
     }
 
+    @Optional.Method(modid = TTRContents.GCID)
     public static void addResearchGC() {
         new ResearchItem(
                 "TTR.MOON",
@@ -95,6 +107,7 @@ public class TTRResearch {
                         .registerResearchItem();
     }
 
+    @Optional.Method(modid = TTRContents.AEID)
     public static void addResearchAE() {
         new ResearchItem(
                 "TTR.CHARGE_CERTUS",
@@ -111,6 +124,7 @@ public class TTRResearch {
                         .registerResearchItem();
     }
 
+    @Optional.Method(modid = TTRContents.TBID)
     public static void addResearchTB() {
         ResearchPage[] pages = new ResearchPage[8];
         pages[0] = new ResearchPage("tc.research_page.TTR.VOIDSEED");
