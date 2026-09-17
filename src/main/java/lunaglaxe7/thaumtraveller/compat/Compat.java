@@ -18,11 +18,11 @@ import thaumcraft.api.aspects.AspectList;
 // mainly add aspects
 public class Compat {
 
-//    public static boolean gc = false;
-//    public static boolean gaia = false;
-//    public static boolean fm = false;
-//    public static boolean ae2 = false;
-//    public static boolean tb = false;
+    // public static boolean gc = false;
+    // public static boolean gaia = false;
+    // public static boolean fm = false;
+    // public static boolean ae2 = false;
+    // public static boolean tb = false;
     public static AspectList list;
 
     // public static void initiate() {

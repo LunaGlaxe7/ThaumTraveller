@@ -4,6 +4,8 @@
  */
 package lunaglaxe7.thaumtraveller.common;
 
+import baubles.api.expanded.BaubleExpandedSlots;
+import baubles.common.BaublesExpanded;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -18,8 +20,12 @@ import lunaglaxe7.thaumtraveller.items.TTRItems;
 @Mod(
         modid = "ThaumTraveller",
         name = "ThaumTraveller",
-        dependencies = "required-after:Thaumcraft;after:GalacticraftCore;" + // "after:GrimoireOfGaia;" +
-                "after:ForbiddenMagic;" + "after:appliedenergistics2;after:thaumicbases")
+        dependencies = "required-after:" + BaublesExpanded.MODID
+                + ";"
+                + "required-after:Thaumcraft;after:GalacticraftCore;"
+                + // "after:GrimoireOfGaia;" +
+                "after:ForbiddenMagic;"
+                + "after:appliedenergistics2;after:thaumicbases")
 public class ThaumTraveller {
 
     @Mod.Instance(value = "ThaumTraveller")
@@ -33,6 +39,7 @@ public class ThaumTraveller {
     public void preInit(FMLPreInitializationEvent event) {
         instance = this;
         Config.configurate(event.getSuggestedConfigurationFile());
+        BaubleExpandedSlots.tryAssignSlotOfType(BaubleExpandedSlots.beltType);
         // Compat.initiate();
         ItemNugget.addNuggets();
         TTRItems.itemRegister(event);
