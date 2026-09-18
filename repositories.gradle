@@ -12,4 +12,10 @@ repositories {
             includeGroup('net.glease')
         }
     }
+
+    maven {
+        //unimixins
+        url 'https://jitpack.io'
+    }
+
 }

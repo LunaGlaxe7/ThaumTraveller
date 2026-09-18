@@ -1,8 +1,12 @@
 // Add your dependencies here
+def unimixinsVersion = "0.3.1"
 
 dependencies {
     api('com.github.GTNewHorizons:Baubles-Expanded:2.2.21-GTNH:dev')
     api('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev') {transitive=false}
+
+//    implementation("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:$unimixinsVersion:dev")
+    annotationProcessor("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:$unimixinsVersion:dev")
 
     compileOnly('com.github.GTNewHorizons:ThaumicBoots:1.5.12:dev') {transitive=false}
     compileOnly('com.github.GTNewHorizons:GTNHLib:0.11.47:dev') { transitive = false }
@@ -23,6 +27,7 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:ThaumicBases:1.9.0:dev'){transitive=false}
     compileOnly('com.github.GTNewHorizons:ThaumicTinkerer:2.12.0:dev'){transitive=false}
     compileOnly('com.github.GTNewHorizons:ThaumicHorizons:1.8.10:dev'){transitive=false}
+    compileOnly('com.github.GTNewHorizons:thaumicinsurgence:0.4.1:dev'){transitive=false}
 
     // For testing purposes
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Electro-Magic-Tools:1.7.24:dev")

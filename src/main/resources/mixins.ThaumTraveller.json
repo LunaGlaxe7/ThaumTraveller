@@ -1,0 +1,10 @@
+{
+  "package": "lunaglaxe7.thaumtraveller.mixin",
+  "required": true,
+  "refmap": "thaumtraveller.refmap.json",
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+      "MixinEventHandlerRunic"
+  ]
+}
