@@ -16,6 +16,7 @@ public class ItemNugget extends Item {
 
     public ItemNugget(String name) {
         this.name = "nugget" + name;
+        // creative tab to be added
         this.setMaxDamage(0).setUnlocalizedName(this.name).setTextureName("ThaumTraveller:" + this.name);
         nuggets.add(this);
     }

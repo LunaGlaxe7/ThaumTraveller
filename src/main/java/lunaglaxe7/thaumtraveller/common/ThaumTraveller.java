@@ -4,6 +4,8 @@
  */
 package lunaglaxe7.thaumtraveller.common;
 
+import net.minecraftforge.common.MinecraftForge;
+
 import baubles.api.expanded.BaubleExpandedSlots;
 import baubles.common.BaublesExpanded;
 import cpw.mods.fml.common.Mod;
@@ -16,6 +18,7 @@ import lunaglaxe7.thaumtraveller.compat.Compat;
 import lunaglaxe7.thaumtraveller.compat.CompatItems;
 import lunaglaxe7.thaumtraveller.items.ItemNugget;
 import lunaglaxe7.thaumtraveller.items.TTRItems;
+import lunaglaxe7.thaumtraveller.libs.events.EventHandlerBodyEssence;
 
 @Mod(
         modid = "ThaumTraveller",
@@ -34,6 +37,7 @@ public class ThaumTraveller {
             clientSide = "lunaglaxe7.thaumtraveller.client.ClientProxy",
             serverSide = "lunaglaxe7.thaumtraveller.common.CommonProxy")
     public static CommonProxy proxy;
+    public EventHandlerBodyEssence bodyEssenceHandler;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -44,6 +48,10 @@ public class ThaumTraveller {
         ItemNugget.addNuggets();
         TTRItems.itemRegister(event);
         TravelAspects.initAspects();
+
+        bodyEssenceHandler = new EventHandlerBodyEssence();
+
+        MinecraftForge.EVENT_BUS.register(this.bodyEssenceHandler);
         proxy.preInit(event);
     }
 

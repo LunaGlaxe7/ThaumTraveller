@@ -9,8 +9,8 @@ import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import lunaglaxe7.thaumtraveller.Config;
 import lunaglaxe7.thaumtraveller.compat.CompatItems;
-import lunaglaxe7.thaumtraveller.items.ItemManaBeanHelper;
 import lunaglaxe7.thaumtraveller.items.ItemNugget;
+import lunaglaxe7.thaumtraveller.util.ManaBeanHelper;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
@@ -38,8 +38,8 @@ public class TTRRecipes {
                 if (aspectBean.getTag().equals(aspectNeed.getTag())) continue;
                 ThaumcraftApi.addCrucibleRecipe(
                         "TTR.BEANTRANS",
-                        ItemManaBeanHelper.beanWithAspect(aspectNeed),
-                        ItemManaBeanHelper.beanWithAspect(aspectBean),
+                        ManaBeanHelper.beanWithAspect(aspectNeed),
+                        ManaBeanHelper.beanWithAspect(aspectBean),
                         new AspectList().add(Aspect.ENTROPY, 2).add(aspectNeed, 1));
             }
         }
@@ -47,8 +47,8 @@ public class TTRRecipes {
                 "BeanTrans",
                 new CrucibleRecipe(
                         "TTR.BEANTRANS",
-                        ItemManaBeanHelper.beanWithAspect(Aspect.WATER),
-                        ItemManaBeanHelper.beanWithAspect(Aspect.AIR),
+                        ManaBeanHelper.beanWithAspect(Aspect.WATER),
+                        ManaBeanHelper.beanWithAspect(Aspect.AIR),
                         new AspectList().add(Aspect.ENTROPY, 2).add(Aspect.WATER, 1)));
     }
 
