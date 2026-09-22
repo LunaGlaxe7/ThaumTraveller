@@ -11,6 +11,7 @@ item.nuggetMeteoricIron.name=§9陨铁粒
 #item.ItemManaBeanordo.name=魔豆-Ordo
 #item.ItemManaBeanperditio.name=魔豆-Perditio
 #item.ItemManaBeanterra.name=魔豆-Terra
+item.Wand.mismatched.cap=离子
 
 #Researches
 tc.research_category.TTRUniverse=神秘使之旅
@@ -43,3 +44,7 @@ tc.research_page.TTR.CHARGE_CERTUS=踏遍世界也未曾邂逅那块发光的石
 tc.research_name.TTR.VOIDSEED=虚空植物
 tc.research_text.TTR.VOIDSEED=不需要种类齐全
 tc.research_page.TTR.VOIDSEED=你发现让它重获生机的关键并不在于种类.
+
+tc.research_name.TTR.MISMATCHEDCAP=离子杖端法杖
+tc.research_text.TTR.MISMATCHEDCAP=搞点花样
+tc.research_page.TTR.MISMATCHEDCAP=通常来讲必须用成对的杖端才能制作法杖，仿佛有某种规则在约束着。<BR>你发现不同杖端之间的相互作用能够达成某种平衡，从而让不同杖端也可以做成一柄法杖。这种平衡使得它们的性能变为两者的平均值。<BR>看起来是不同杖端，实则在这种平衡状态下它们已经不分彼此。

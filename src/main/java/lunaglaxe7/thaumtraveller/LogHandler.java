@@ -8,12 +8,11 @@ public class LogHandler {
 
     public static final Logger logger = LogManager.getLogger((String) "ThaumTraveller");
 
-    public static void log(Level level, Throwable e, String message) {
-        LogHandler.log(level, message);
-        e.printStackTrace();
-    }
-
     public static void log(Level level, String message) {
         logger.log(level, message);
+    }
+
+    public static void info(String message) {
+        logger.log(Level.INFO, message);
     }
 }

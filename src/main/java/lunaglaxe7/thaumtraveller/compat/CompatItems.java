@@ -46,12 +46,20 @@ public class CompatItems {
     // items from thaumic bases
     public static ItemStack voidSeed;
 
+    public static ItemStack ironCap;
+
     public static void importItems() {
+        importTCItems();
         if (Config.crossMod) {
             importGCItems();
             importAEItems();
             importTBItems();
         }
+    }
+
+    @Optional.Method(modid = TTRContents.TCID)
+    public static void importTCItems() {
+        ironCap = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "WandCap"), 1, 0);
     }
 
     @Optional.Method(modid = TTRContents.GCID)

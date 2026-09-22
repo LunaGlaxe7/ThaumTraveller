@@ -8,6 +8,8 @@
       "MixinEventHandlerRunic",
       "MixinArcaneWandRecipe",
       "MixinWandCap",
-      "MixinWandRod"
+      "MixinWandRod",
+      "MixinItemWandCasting",
+      "MixinModelWand"
   ]
 }

@@ -6,8 +6,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import lunaglaxe7.thaumtraveller.api.BodyEssence;
+import lunaglaxe7.thaumtraveller.api.util.AspectHelper;
 import lunaglaxe7.thaumtraveller.libs.WandPartCache;
-import lunaglaxe7.thaumtraveller.util.AspectHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 
@@ -23,6 +23,7 @@ public class CommonProxy {
 
     public void postInit(FMLPostInitializationEvent event) {
         AspectHelper.init();
+        wandPartCache.registerAllNormalSpecialCaps();
     }
 
     public AspectList getEssence(String player) {

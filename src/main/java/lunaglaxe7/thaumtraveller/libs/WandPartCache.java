@@ -6,17 +6,95 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import org.apache.logging.log4j.Level;
 
 import lunaglaxe7.thaumtraveller.LogHandler;
+import lunaglaxe7.thaumtraveller.api.SpecialCap;
+import thaumcraft.api.wands.WandCap;
 
 public class WandPartCache {
 
-    private Map<ItemWithDamage, String> caps = new ConcurrentHashMap<>();
-    private Map<ItemWithDamage, String> rods = new ConcurrentHashMap<>();
+    private final Map<ItemWithDamage, String> caps = new ConcurrentHashMap<>();
+    private final Map<ItemWithDamage, String> rods = new ConcurrentHashMap<>();
+    private final Map<String, SpecialCap> specialCaps = new ConcurrentHashMap<>();
+
+    public void registerAllNormalSpecialCaps() {
+        WandCap[] caps = WandCap.caps.values().toArray(new WandCap[0]);
+        for (int i = 0; i < caps.length; i++) {
+            for (int j = 0; j < caps.length; j++) {
+                if (i == j) continue;
+                SpecialCap s = SpecialCap.build(caps[i].getItem(), caps[j].getItem());
+                LogHandler.info(parseSpecialCap(s) + " cap special registed");
+            }
+        }
+        LogHandler.info("all normal special caps registed");
+    }
+
+    public SpecialCap registerSpecialCap(SpecialCap cap) {
+        if (cap != null) {
+            String s = parseSpecialCap(cap);
+            if (!specialCaps.containsKey(s)) {
+                return specialCaps.put(s, cap);
+            }
+        }
+        return null;
+    }
+
+    public WandCap getSpecialCap(ItemStack wand) {
+        if (wand.hasTagCompound()) {
+            String s = parseSpecialCapFromNBT(wand.getTagCompound());
+            if (s != null) {
+                // this condition to be upgraded
+                if (s.contains("|") || s.contains("#")) {
+                    if (specialCaps.containsKey(s)) {
+                        return specialCaps.get(s);
+                    } else {
+                        return SpecialCap.buildFromWand(wand);
+                    }
+                } else if (WandCap.caps.containsKey(s)) return WandCap.caps.get(s);
+            }
+        }
+        return null;
+    }
+
+    public boolean hasSpecialCap(ItemStack wand) {
+        if (wand.hasTagCompound()) {
+            return specialCaps.containsKey(parseSpecialCapFromNBT(wand.getTagCompound()));
+        }
+        return false;
+    }
+
+    public String parseSpecialCapFromNBT(NBTTagCompound nbt) {
+        if (nbt.hasKey("cap")) {
+            return nbt.getString("cap");
+        }
+        if (nbt.hasKey("cap1")) {
+            return nbt.getString("cap1") + "|" + nbt.getString("cap2");
+        }
+        return null;
+    }
+
+    public String parseSpecialCap(SpecialCap cap) {
+        if (cap == null) return null;
+        if (cap.isDiff()) {
+            ItemStack[] caps = cap.getCaps();
+            String[] tags = new String[] { getCapTag(caps[0]), getCapTag(caps[1]) };
+            if (caps[0].hasTagCompound()) {
+                // TODO
+            }
+            return tags[0] + "|" + tags[1];
+        }
+        String tag = cap.getTag();
+        if (cap.getCap().hasTagCompound()) {
+            // TODO
+        }
+        return tag;
+    }
 
     public void registerCap(ItemStack cap, String tag) {
+        if (caps.containsValue(tag)) return;
         if (cap != null && tag != null) {
             this.caps.put(new ItemWithDamage(cap), tag);
             LogHandler.log(Level.INFO, tag + " cap registed");
@@ -32,6 +110,7 @@ public class WandPartCache {
     }
 
     public void registerRod(ItemStack rod, String tag) {
+        if (rods.containsValue(tag)) return;
         if (rod != null && tag != null) {
             this.rods.put(new ItemWithDamage(rod), tag);
             LogHandler.log(Level.INFO, tag + " rod registed");

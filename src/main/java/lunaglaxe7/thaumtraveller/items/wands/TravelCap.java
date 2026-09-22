@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import lunaglaxe7.thaumtraveller.api.UType;
 import thaumcraft.api.wands.WandCap;
 
-// try to realize upgradable covalent cap but too difficult
+// try to realize upgradable covalent cap
 public class TravelCap extends WandCap {
 
     public TravelCap(String tag, float discount, ItemStack item, int craftCost) {

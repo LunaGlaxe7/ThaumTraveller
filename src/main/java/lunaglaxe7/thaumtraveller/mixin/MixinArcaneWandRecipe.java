@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import lunaglaxe7.thaumtraveller.api.util.WandHelper;
 import lunaglaxe7.thaumtraveller.common.TTRContents;
 import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
 import lunaglaxe7.thaumtraveller.libs.WandPartCache;
@@ -44,13 +45,9 @@ abstract class MixinArcaneWandRecipe {
                     costR = WandRod.rods.get(tagR).getCraftCost();
 
                     int cost = (costC1 + costC2) * costR / 2;
-                    // TODO: make my wand here
                     out = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "WandCasting"), 1, cost);
-                    // if (!tagC1.equals("iron")
-                    // && !tagC2.equals("iron") && !tagR.equals("wood")) {
-                    // ((ItemWandCasting) out.getItem()).setCap(out, WandCap.caps.get(tagC1));
-                    // ((ItemWandCasting) out.getItem()).setRod(out, WandRod.rods.get(tagR));
-                    // }
+                    WandHelper.setCapSpecial(out, cap1, cap2);
+                    WandHelper.setRod(out, rod);
                 }
                 cb.setReturnValue(out);
                 cb.cancel();
@@ -102,7 +99,9 @@ abstract class MixinArcaneWandRecipe {
                                 WandCap.caps.get(tag[1]).getResearch())
                         && ThaumcraftApiHelper.isResearchComplete(
                                 player.getCommandSenderName(),
-                                WandRod.rods.get(tag[2]).getResearch())) {
+                                WandRod.rods.get(tag[2]).getResearch())
+                        && ThaumcraftApiHelper
+                                .isResearchComplete(player.getCommandSenderName(), TTRContents.MISMATCHEDCAPKEY)) {
                     c.setReturnValue(Boolean.TRUE);
                     c.cancel();
                 }

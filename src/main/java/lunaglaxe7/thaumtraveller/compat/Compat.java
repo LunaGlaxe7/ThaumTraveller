@@ -2,8 +2,6 @@ package lunaglaxe7.thaumtraveller.compat;
 
 import net.minecraft.item.ItemStack;
 
-import org.apache.logging.log4j.Level;
-
 import cpw.mods.fml.common.Optional;
 import lunaglaxe7.thaumtraveller.Config;
 import lunaglaxe7.thaumtraveller.LogHandler;
@@ -139,7 +137,7 @@ public class Compat {
             list = new AspectList().add(Aspect.DEATH, 10).add(Aspect.UNDEAD, 10);
             ThaumcraftApi.registerEntityTag("GalacticraftCore.EvolvedSkeletonBoss", list);
         } catch (Exception e) {
-            LogHandler.log(Level.INFO, e, "ThaumTraveller tried to travel to the Moon but failed.");
+            LogHandler.info("ThaumTraveller tried to travel to the Moon but failed.");
         }
     }
 

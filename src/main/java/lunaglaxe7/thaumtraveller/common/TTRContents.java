@@ -10,4 +10,6 @@ public class TTRContents {
     public static final String AEID = "appliedenergistics2";
     public static final String TBID = "thaumicbases";
 
+    public static final String MISMATCHEDCAPKEY = "TTR.MISMATCHEDCAP";
+
 }

@@ -3,7 +3,6 @@ package lunaglaxe7.thaumtraveller.libs.events;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -22,7 +21,10 @@ import thaumcraft.api.aspects.Aspect;
 public class EventHandlerBodyEssence {
 
     private float slowProbability = 0.1f;
-    private static final Random random = new Random();
+
+    private float randFloat(EntityPlayer player) {
+        return player.getEntityWorld().rand.nextFloat();
+    }
 
     private void addAerEssence(String player) {
         ThaumTraveller.proxy.addEssence(player, Aspect.AIR);
@@ -54,7 +56,8 @@ public class EventHandlerBodyEssence {
             String id = event.entity.getUniqueID().toString();
             addEarthEssence(id);
             if (event.source.isExplosion()) addEarthEssence(id);
-            if (event.source.isFireDamage() && (random.nextFloat() < slowProbability)) addIgnEssence(id);
+            if (event.source.isFireDamage() && (randFloat((EntityPlayer) event.entity) < slowProbability))
+                addIgnEssence(id);
         }
     }
 

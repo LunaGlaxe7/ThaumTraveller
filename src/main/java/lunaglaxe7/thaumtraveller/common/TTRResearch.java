@@ -59,9 +59,23 @@ public class TTRResearch {
                         .setPages(
                                 new ResearchPage("tc.research_page.TTR.BEANTRANS"),
                                 new ResearchPage((CrucibleRecipe) recipes.get("BeanTrans")))
-                        .setItemTriggers(ItemApi.getItem("itemManaBean", 0)) // now the research will be unlocked after
-                                                                             // scan the manabean
+                        .setConcealed().setItemTriggers(ItemApi.getItem("itemManaBean", 0)) // now the research will be
+                                                                                            // unlocked after
+                                                                                            // scan the manabean
                         .registerResearchItem();
+
+        new ResearchItem(
+                TTRContents.MISMATCHEDCAPKEY,
+                "TTRUniverse",
+                new AspectList().add(Aspect.AURA, 5).add(Aspect.ENTROPY, 5).add(Aspect.ORDER, 5).add(Aspect.EARTH, 5)
+                        .add(Aspect.MAGIC, 5),
+                -4,
+                5,
+                3,
+                CompatItems.ironCap).setParents("TTR.TRAVEL", "CAP_gold")
+                        .setPages(new ResearchPage("tc.research_page." + TTRContents.MISMATCHEDCAPKEY))
+                        .registerResearchItem();
+
     }
 
     @Optional.Method(modid = TTRContents.GCID)
