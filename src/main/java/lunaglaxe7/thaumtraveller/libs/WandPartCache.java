@@ -3,6 +3,7 @@ package lunaglaxe7.thaumtraveller.libs;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,8 +24,8 @@ public class WandPartCache {
     public void registerAllNormalSpecialCaps() {
         WandCap[] caps = WandCap.caps.values().toArray(new WandCap[0]);
         for (int i = 0; i < caps.length; i++) {
-            for (int j = 0; j < caps.length; j++) {
-                if (i == j) continue;
+            // now cache is half of origin
+            for (int j = i + 1; j < caps.length; j++) {
                 SpecialCap s = SpecialCap.build(caps[i].getItem(), caps[j].getItem());
                 LogHandler.info(parseSpecialCap(s) + " cap special registed");
             }
@@ -32,14 +33,13 @@ public class WandPartCache {
         LogHandler.info("all normal special caps registed");
     }
 
-    public SpecialCap registerSpecialCap(SpecialCap cap) {
+    public void registerSpecialCap(SpecialCap cap) {
         if (cap != null) {
             String s = parseSpecialCap(cap);
             if (!specialCaps.containsKey(s)) {
-                return specialCaps.put(s, cap);
+                specialCaps.put(s, cap);
             }
         }
-        return null;
     }
 
     public WandCap getSpecialCap(ItemStack wand) {
@@ -53,17 +53,11 @@ public class WandPartCache {
                     } else {
                         return SpecialCap.buildFromWand(wand);
                     }
+
                 } else if (WandCap.caps.containsKey(s)) return WandCap.caps.get(s);
             }
         }
         return null;
-    }
-
-    public boolean hasSpecialCap(ItemStack wand) {
-        if (wand.hasTagCompound()) {
-            return specialCaps.containsKey(parseSpecialCapFromNBT(wand.getTagCompound()));
-        }
-        return false;
     }
 
     public String parseSpecialCapFromNBT(NBTTagCompound nbt) {
@@ -71,9 +65,16 @@ public class WandPartCache {
             return nbt.getString("cap");
         }
         if (nbt.hasKey("cap1")) {
+            // so flipped one will be thought the same as the normal one in cache
+            if (nbt.hasKey("flipped") && checkNbtByte(nbt)) return nbt.getString("cap2") + "|" + nbt.getString("cap1");
             return nbt.getString("cap1") + "|" + nbt.getString("cap2");
         }
         return null;
+    }
+
+    // setTagInfo can't set boolean directly so
+    private boolean checkNbtByte(NBTTagCompound nbt) {
+        return nbt.getByte("flipped") == 1;
     }
 
     public String parseSpecialCap(SpecialCap cap) {
@@ -91,6 +92,16 @@ public class WandPartCache {
             // TODO
         }
         return tag;
+    }
+
+    // DO NOT pass a null here
+    public boolean checkFlipped(SpecialCap cap) {
+        String[] tags = cap.getTag().split(Pattern.quote("|"));
+        return checkFlipped(tags[0], tags[1]);
+    }
+
+    public boolean checkFlipped(String tag1, String tag2) {
+        return specialCaps.containsKey(tag2 + "|" + tag1);
     }
 
     public void registerCap(ItemStack cap, String tag) {

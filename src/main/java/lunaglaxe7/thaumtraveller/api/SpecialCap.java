@@ -109,6 +109,10 @@ public class SpecialCap extends WandCap {
         return cost;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isDiff() {
         return diff;
     }
@@ -117,6 +121,9 @@ public class SpecialCap extends WandCap {
         return cap;
     }
 
+    /**
+     * normally 0 is the bottom, 1 is the top. 1 is the bottom and 0 is the top when flipped
+     */
     public ItemStack[] getCaps() {
         return new ItemStack[] { cap1, cap2 };
     }

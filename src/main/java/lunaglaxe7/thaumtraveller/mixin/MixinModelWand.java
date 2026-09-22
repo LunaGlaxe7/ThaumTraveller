@@ -28,8 +28,10 @@ abstract class MixinModelWand {
         if (cap instanceof SpecialCap) {
             SpecialCap s = (SpecialCap) cap;
             if (s.isDiff()) {
-                WandCap cap2 = WandHelper.getCap(s.getCaps()[1]);
-                Minecraft.getMinecraft().renderEngine.bindTexture(cap2.getTexture());
+                // default caps[1] is the top
+                // when flipped, caps[0] is the top
+                WandCap capTop = WandHelper.getCap(s.getCaps()[1 - WandHelper.checkFlippedByte(wand)]);
+                Minecraft.getMinecraft().renderEngine.bindTexture(capTop.getTexture());
             }
         }
     }
@@ -47,7 +49,9 @@ abstract class MixinModelWand {
             SpecialCap s = (SpecialCap) cap;
             // s can't be null
             if (s.isDiff()) {
-                WandCap cap1 = WandHelper.getCap(s.getCaps()[0]);
+                // default caps[0] is the bottom
+                // when flipped it should be caps[1]
+                WandCap cap1 = WandHelper.getCap(s.getCaps()[WandHelper.checkFlippedByte(wand)]);
                 Minecraft.getMinecraft().renderEngine.bindTexture(cap1.getTexture());
             }
         }

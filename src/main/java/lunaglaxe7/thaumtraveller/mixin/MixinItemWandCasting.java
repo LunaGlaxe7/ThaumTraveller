@@ -57,8 +57,12 @@ public class MixinItemWandCasting {
                 String[] tags = tag.split(Pattern.quote("|"));
                 ori = ori.replace(
                         "%CAP",
-                        StatCollector.translateToLocal("item.Wand." + tags[0] + ".cap") + "-"
-                                + StatCollector.translateToLocal("item.Wand." + tags[1] + ".cap")
+                        // normally 0 is the bottom, 1 is the top
+                        // 1 is the bottom and 0 is the top when flipped
+                        StatCollector.translateToLocal("item.Wand." + tags[WandHelper.checkFlippedByte(wand)] + ".cap")
+                                + "-"
+                                + StatCollector.translateToLocal(
+                                        "item.Wand." + tags[1 - WandHelper.checkFlippedByte(wand)] + ".cap")
                                 + StatCollector.translateToLocal("item.Wand.mismatched.cap"));
             }
         } else ori = ori.replace(c1, c2);

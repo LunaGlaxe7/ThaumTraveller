@@ -48,6 +48,7 @@ abstract class MixinArcaneWandRecipe {
                     out = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "WandCasting"), 1, cost);
                     WandHelper.setCapSpecial(out, cap1, cap2);
                     WandHelper.setRod(out, rod);
+                    WandHelper.setFlipped(out, tagC1, tagC2);
                 }
                 cb.setReturnValue(out);
                 cb.cancel();

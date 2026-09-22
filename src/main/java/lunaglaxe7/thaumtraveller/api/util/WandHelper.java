@@ -3,6 +3,7 @@ package lunaglaxe7.thaumtraveller.api.util;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagString;
 
 import lunaglaxe7.thaumtraveller.api.SpecialCap;
@@ -19,6 +20,19 @@ public class WandHelper {
             return;
         }
         wand.setTagInfo("rod#", rod.getTagCompound());
+    }
+
+    public static void setFlipped(ItemStack wand, String tag1, String tag2) {
+        wand.setTagInfo("flipped", new NBTTagByte(checkFlippedByTags(tag1, tag2) ? (byte) 1 : (byte) 0));
+    }
+
+    // may be useful
+    public static int checkFlippedByte(ItemStack wand) {
+        return wand.getTagCompound().getByte("flipped");
+    }
+
+    public static boolean checkFlippedByTags(String tag1, String tag2) {
+        return ThaumTraveller.proxy.wandPartCache.checkFlipped(tag1, tag2);
     }
 
     public static String parseStringSpecialCap(SpecialCap cap) {
