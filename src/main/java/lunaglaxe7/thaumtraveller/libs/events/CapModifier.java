@@ -4,12 +4,17 @@ import lunaglaxe7.thaumtraveller.api.IHandler;
 import lunaglaxe7.thaumtraveller.api.TravelEvent;
 import lunaglaxe7.thaumtraveller.common.event.CapInfoEvent;
 
-public class CapModifier implements IHandler {
+public abstract class CapModifier implements IHandler {
 
-    @Override
-    public void handle(TravelEvent event) {
-        if (event instanceof CapInfoEvent.CapCraftCost) {
-            Integer cost = ((CapInfoEvent.CapCraftCost) event).cost;
+    public static class CraftCostModifier extends CapModifier {
+
+        private int modifier;
+
+        @Override
+        public void handle(TravelEvent event) {
+            if (event instanceof CapInfoEvent.CapCraftCost) {
+                CapInfoEvent.CapCraftCost c = (CapInfoEvent.CapCraftCost) event;
+            }
         }
     }
 }

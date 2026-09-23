@@ -27,8 +27,14 @@ public class WandPartCache {
             // now cache is half of origin
             for (int j = i + 1; j < caps.length; j++) {
                 SpecialCap s = SpecialCap.build(caps[i].getItem(), caps[j].getItem());
-                LogHandler.info(parseSpecialCap(s) + " cap special registed");
+                LogHandler.info(s.getTag() + " cap special registed");
             }
+        }
+        LogHandler.info("all mismatched special caps registed");
+        // to be used on caps with upgrade but not diff
+        for (WandCap cap : caps) {
+            SpecialCap s = SpecialCap.build(cap.getItem());
+            LogHandler.info(s.getTag() + "cap normal registed");
         }
         LogHandler.info("all normal special caps registed");
     }
@@ -42,19 +48,29 @@ public class WandPartCache {
         }
     }
 
+    public SpecialCap getSpecialCapFromCap(ItemStack cap) {
+        return specialCaps.getOrDefault(getCapTag(cap), null);
+    }
+
+    public SpecialCap getSpecialCap(ItemStack cap1, ItemStack cap2) {
+        return getSpecialCap(getCapTag(cap1), getCapTag(cap2));
+    }
+
+    public SpecialCap getSpecialCap(String tag1, String tag2) {
+        return specialCaps.containsKey(tag1 + "|" + tag2) ? specialCaps.get(tag1 + "|" + tag2)
+                : specialCaps.get(tag2 + "|" + tag1);
+    }
+
     public WandCap getSpecialCap(ItemStack wand) {
         if (wand.hasTagCompound()) {
             String s = parseSpecialCapFromNBT(wand.getTagCompound());
+            // flipped has been resolved
             if (s != null) {
-                // this condition to be upgraded
-                if (s.contains("|") || s.contains("#")) {
-                    if (specialCaps.containsKey(s)) {
-                        return specialCaps.get(s);
-                    } else {
-                        return SpecialCap.buildFromWand(wand);
-                    }
-
-                } else if (WandCap.caps.containsKey(s)) return WandCap.caps.get(s);
+                if (specialCaps.containsKey(s)) {
+                    return specialCaps.get(s);
+                } else {
+                    return SpecialCap.buildFromWand(wand);
+                }
             }
         }
         return null;
@@ -77,21 +93,17 @@ public class WandPartCache {
         return nbt.getByte("flipped") == 1;
     }
 
+    /**
+     * @return never has "#"
+     */
     public String parseSpecialCap(SpecialCap cap) {
         if (cap == null) return null;
         if (cap.isDiff()) {
             ItemStack[] caps = cap.getCaps();
             String[] tags = new String[] { getCapTag(caps[0]), getCapTag(caps[1]) };
-            if (caps[0].hasTagCompound()) {
-                // TODO
-            }
             return tags[0] + "|" + tags[1];
         }
-        String tag = cap.getTag();
-        if (cap.getCap().hasTagCompound()) {
-            // TODO
-        }
-        return tag;
+        return getCapTag(cap.getCap());
     }
 
     // DO NOT pass a null here

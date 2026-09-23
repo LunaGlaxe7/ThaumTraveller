@@ -12,6 +12,8 @@ import net.minecraft.util.ResourceLocation;
 
 import lunaglaxe7.thaumtraveller.api.util.WandHelper;
 import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
+import lunaglaxe7.thaumtraveller.common.event.CapInfoEvent;
+import lunaglaxe7.thaumtraveller.libs.TravelEventManager;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.wands.WandCap;
 
@@ -30,9 +32,6 @@ public class SpecialCap extends WandCap {
     }
 
     public static WandCap buildFromNbt(NBTTagCompound nbt) {
-        SpecialCap out = null;
-        ItemStack cap = null;
-
         // normal cap
         if (nbt.hasKey("cap")) {
             return caps.get(nbt.getString("cap"));
@@ -42,18 +41,7 @@ public class SpecialCap extends WandCap {
         if (nbt.hasKey("cap1")) {
             return build(nbt.getString("cap1"), nbt.getString("cap2"));
         }
-        // 用#来指定这是有附加信息的
-        // '#' used to mark a special cap
-        if (nbt.hasKey("cap#")) {
-            NBTTagCompound capNbt = nbt.getCompoundTag("cap#");
-            // TODO
-        }
-        if (nbt.hasKey("cap1#")) {
-            NBTTagCompound cap1Nbt = nbt.getCompoundTag("cap1#");
-            NBTTagCompound cap2Nbt = nbt.getCompoundTag("cap2#");
-            // TODO
-        }
-        return out;
+        return null;
     }
 
     public static SpecialCap build(String tag1, String tag2) {
@@ -104,15 +92,10 @@ public class SpecialCap extends WandCap {
     @Override
     public int getCraftCost() {
         int cost = diff ? (WandHelper.getCapCost(cap1) + WandHelper.getCapCost(cap2)) / 2 : WandHelper.getCapCost(cap);
-        Integer c = cost;
-
-        return cost;
+        // resolve modifiers
+        return cost / TravelEventManager.capCostModifiers(new CapInfoEvent.CapCraftCost(this));
     }
 
-    /**
-     *
-     * @return
-     */
     public boolean isDiff() {
         return diff;
     }
@@ -135,7 +118,10 @@ public class SpecialCap extends WandCap {
 
     @Override
     public float getBaseCostModifier() {
-        return this.discount;
+        float origin = this.discount;
+        origin = origin + TravelEventManager.addingDiscountModifiers(new CapInfoEvent.CapDiscountAdding(this));
+        origin = origin * TravelEventManager.multiplyDiscountModifiers(new CapInfoEvent.CapDiscountMul(this));
+        return origin;
     }
 
     @Override
@@ -153,7 +139,12 @@ public class SpecialCap extends WandCap {
     }
 
     public float getSpecialCostModifier(Aspect a) {
-        return specialDiscount.get(a.getTag());
+        float origin = specialDiscount.get(a.getTag());
+        float baseModi = (origin + TravelEventManager.addingDiscountModifiers(new CapInfoEvent.CapDiscountAdding(this)))
+                * TravelEventManager.multiplyDiscountModifiers(new CapInfoEvent.CapDiscountMul(this));
+        return (baseModi
+                + TravelEventManager.addingSpecialDiscountModifiers(new CapInfoEvent.SpecialDiscountAdding(this, a)))
+                * TravelEventManager.multiplySpecialDiscountModifiers(new CapInfoEvent.SpecialDiscountMul(this, a));
     }
 
     @Override

@@ -52,7 +52,7 @@ public class MixinItemWandCasting {
         if (WandHelper.getSpecialCap(wand) instanceof SpecialCap) {
             cap = (SpecialCap) WandHelper.getSpecialCap(wand);
             String tag = cap.getTag();
-            if (tag.contains("|")) {
+            if (cap.isDiff()) {
                 // "|" in regex has special meaning...
                 String[] tags = tag.split(Pattern.quote("|"));
                 ori = ori.replace(
@@ -64,7 +64,7 @@ public class MixinItemWandCasting {
                                 + StatCollector.translateToLocal(
                                         "item.Wand." + tags[1 - WandHelper.checkFlippedByte(wand)] + ".cap")
                                 + StatCollector.translateToLocal("item.Wand.mismatched.cap"));
-            }
+            } else ori = ori.replace(c1, c2);
         } else ori = ori.replace(c1, c2);
         return ori;
     }

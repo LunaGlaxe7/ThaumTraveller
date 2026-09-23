@@ -38,21 +38,28 @@ abstract class MixinArcaneWandRecipe {
                 String tagC1 = getCache().getCapTag(cap1);
                 String tagC2 = getCache().getCapTag(cap2);
                 String tagR = getCache().getRodTag(rod);
-                int costC1 = 0, costC2 = 0, costR = 0;
+                int costC = 0, costR = 0;
                 if (tagC1 != null && tagC2 != null && tagR != null) {
-                    costC1 = WandCap.caps.get(tagC1).getCraftCost();
-                    costC2 = WandCap.caps.get(tagC2).getCraftCost();
+                    // can't be null unless the cache got something wrong
+                    costC = getCache().getSpecialCap(tagC1, tagC2).getCraftCost();
                     costR = WandRod.rods.get(tagR).getCraftCost();
-
-                    int cost = (costC1 + costC2) * costR / 2;
-                    out = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "WandCasting"), 1, cost);
+                    out = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "WandCasting"), 1, costC * costR);
                     WandHelper.setCapSpecial(out, cap1, cap2);
                     WandHelper.setRod(out, rod);
                     WandHelper.setFlipped(out, tagC1, tagC2);
                 }
-                cb.setReturnValue(out);
-                cb.cancel();
+            } else {
+                // normal wand
+                int costR = WandHelper.getRod(rod).getCraftCost();
+                out = new ItemStack(
+                        GameRegistry.findItem(TTRContents.TCID, "WandCasting"),
+                        1,
+                        getCache().getSpecialCapFromCap(cap1).getCraftCost() * costR);
+                WandHelper.setCap(out, cap1);
+                WandHelper.setRod(out, rod);
             }
+            cb.setReturnValue(out);
+            cb.cancel();
         }
 
     }
@@ -64,24 +71,19 @@ abstract class MixinArcaneWandRecipe {
         ItemStack rod = getStack(inv, 1, 1);
         ItemStack cap2 = getStack(inv, 2, 0);
         if (checkWandTemplate(inv)) {
+            int costC = 0, costR = WandHelper.getRod(rod).getCraftCost();;
             if (!cap1.isItemEqual(cap2)) {
-                String tagC1 = getCache().getCapTag(cap1);
-                String tagC2 = getCache().getCapTag(cap2);
-                String tagR = getCache().getRodTag(rod);
-                int costC1 = 0, costC2 = 0, costR = 0;
-                if (tagC1 != null && tagC2 != null && tagR != null) {
-                    costC1 = WandCap.caps.get(tagC1).getCraftCost();
-                    costC2 = WandCap.caps.get(tagC2).getCraftCost();
-                    costR = WandRod.rods.get(tagR).getCraftCost();
-
-                    int cost = (costC1 + costC2) * costR / 2;
-                    for (Aspect a : Aspect.getPrimalAspects()) {
-                        out.add(a, cost);
-                    }
-                    c.setReturnValue(out);
-                    c.cancel();
-                }
+                costC = getCache().getSpecialCap(cap1, cap2).getCraftCost();
+            } else {
+                costC = getCache().getSpecialCapFromCap(cap1).getCraftCost();
             }
+
+            int cost = costC * costR;
+            for (Aspect a : Aspect.getPrimalAspects()) {
+                out.add(a, cost);
+            }
+            c.setReturnValue(out);
+            c.cancel();
         }
     }
 

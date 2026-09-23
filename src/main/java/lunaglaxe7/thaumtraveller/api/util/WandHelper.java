@@ -15,11 +15,8 @@ import thaumcraft.api.wands.WandRod;
 public class WandHelper {
 
     public static void setRod(ItemStack wand, ItemStack rod) {
-        if (!rod.hasTagCompound()) {
-            wand.setTagInfo("rod", new NBTTagString(getRod(rod).getTag()));
-            return;
-        }
-        wand.setTagInfo("rod#", rod.getTagCompound());
+        wand.setTagInfo("rod", new NBTTagString(getRod(rod).getTag()));
+        if (rod.hasTagCompound()) wand.setTagInfo("rod#", rod.getTagCompound());
     }
 
     public static void setFlipped(ItemStack wand, String tag1, String tag2) {
@@ -40,21 +37,16 @@ public class WandHelper {
     }
 
     public static void setCap(ItemStack wand, ItemStack cap) {
-        if (!cap.hasTagCompound()) {
-            wand.setTagInfo("cap", new NBTTagString(getCap(cap).getTag()));
-            return;
-        }
-        wand.setTagInfo("cap#", cap.getTagCompound());
+        wand.setTagInfo("cap", new NBTTagString(getCap(cap).getTag()));
+        if (cap.hasTagCompound()) wand.setTagInfo("cap#", cap.getTagCompound());
     }
 
     public static void setCapSpecial(ItemStack wand, ItemStack cap1, ItemStack cap2) {
-        if (!cap1.hasTagCompound()) {
-            wand.setTagInfo("cap1", new NBTTagString(getCap(cap1).getTag()));
-        } else wand.setTagInfo("cap1#", cap1.getTagCompound());
+        wand.setTagInfo("cap1", new NBTTagString(getCap(cap1).getTag()));
+        if (cap1.hasTagCompound()) wand.setTagInfo("cap1#", cap1.getTagCompound());
 
-        if (!cap2.hasTagCompound()) {
-            wand.setTagInfo("cap2", new NBTTagString(getCap(cap2).getTag()));
-        } else wand.setTagInfo("cap2#", cap2.getTagCompound());
+        wand.setTagInfo("cap2", new NBTTagString(getCap(cap2).getTag()));
+        if (cap2.hasTagCompound()) wand.setTagInfo("cap2#", cap2.getTagCompound());
     }
 
     public static WandCap getSpecialCap(ItemStack wand) {
