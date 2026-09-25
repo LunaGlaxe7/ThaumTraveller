@@ -88,7 +88,7 @@ public class CapInfoEvent extends TravelEvent {
 
     public static class CapDiscountMul extends CapInfoEvent {
 
-        private float modifier = 0f;
+        private float modifier = 1f;
 
         public CapDiscountMul(SpecialCap cap) {
             super(cap);

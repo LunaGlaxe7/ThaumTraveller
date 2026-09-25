@@ -22,18 +22,19 @@ public class WandPartCache {
     private final Map<String, SpecialCap> specialCaps = new ConcurrentHashMap<>();
 
     public void registerAllNormalSpecialCaps() {
-        WandCap[] caps = WandCap.caps.values().toArray(new WandCap[0]);
-        for (int i = 0; i < caps.length; i++) {
+        Map<String, WandCap> wandCap = WandCap.caps;
+        String[] tags = caps.values().toArray(new String[0]);
+        for (int i = 0; i < tags.length; i++) {
             // now cache is half of origin
-            for (int j = i + 1; j < caps.length; j++) {
-                SpecialCap s = SpecialCap.build(caps[i].getItem(), caps[j].getItem());
+            for (int j = i + 1; j < tags.length; j++) {
+                SpecialCap s = SpecialCap.build(wandCap.get(tags[i]).getItem(), wandCap.get(tags[j]).getItem());
                 LogHandler.info(s.getTag() + " cap special registed");
             }
         }
         LogHandler.info("all mismatched special caps registed");
         // to be used on caps with upgrade but not diff
-        for (WandCap cap : caps) {
-            SpecialCap s = SpecialCap.build(cap.getItem());
+        for (String tag : tags) {
+            SpecialCap s = SpecialCap.build(wandCap.get(tag).getItem());
             LogHandler.info(s.getTag() + "cap normal registed");
         }
         LogHandler.info("all normal special caps registed");
@@ -118,7 +119,9 @@ public class WandPartCache {
 
     public void registerCap(ItemStack cap, String tag) {
         if (caps.containsValue(tag)) return;
-        if (cap != null && tag != null) {
+        if (cap != null && tag != null &&
+        // a bug when launched with thaumic tinker whose kami is falsed should be fixed by this
+                cap.getItem() != null) {
             this.caps.put(new ItemWithDamage(cap), tag);
             LogHandler.log(Level.INFO, tag + " cap registed");
         }
@@ -134,7 +137,9 @@ public class WandPartCache {
 
     public void registerRod(ItemStack rod, String tag) {
         if (rods.containsValue(tag)) return;
-        if (rod != null && tag != null) {
+        if (rod != null && tag != null &&
+        // a bug when launched with thaumic tinker whose kami is falsed should be fixed by this
+                rod.getItem() != null) {
             this.rods.put(new ItemWithDamage(rod), tag);
             LogHandler.log(Level.INFO, tag + " rod registed");
         }

@@ -18,47 +18,57 @@ public class TravelEventManager {
         instance.manager.computeIfAbsent(c, k -> new ArrayList<>()).add(handler);
     }
 
-    public static List<IHandler> getHandlers(Class<TravelEvent> c) {
+    public static List<IHandler> getHandlers(Class<? extends TravelEvent> c) {
         return instance.manager.get(c);
     }
 
     // 结果用来除原本的craft cost
     public static int capCostModifiers(CapInfoEvent.CapCraftCost event) {
-        IHandler[] handlers = instance.manager.get(CapInfoEvent.CapCraftCost.class).toArray(new IHandler[0]);
-        for (IHandler handler : handlers) {
-            handler.handle(event);
+        List<IHandler> handlers = getHandlers(CapInfoEvent.CapCraftCost.class);
+        if (handlers != null && !handlers.isEmpty()) {
+            for (IHandler handler : handlers) {
+                handler.handle(event);
+            }
         }
         return event.getModifier();
     }
 
     public static float addingDiscountModifiers(CapInfoEvent.CapDiscountAdding event) {
-        IHandler[] handlers = instance.manager.get(CapInfoEvent.CapDiscountAdding.class).toArray(new IHandler[0]);
-        for (IHandler handler : handlers) {
-            handler.handle(event);
+        List<IHandler> handlers = getHandlers(CapInfoEvent.CapDiscountAdding.class);
+        if (handlers != null && !handlers.isEmpty()) {
+            for (IHandler handler : handlers) {
+                handler.handle(event);
+            }
         }
         return event.getModifier();
     }
 
     public static float multiplyDiscountModifiers(CapInfoEvent.CapDiscountMul event) {
-        IHandler[] handlers = instance.manager.get(CapInfoEvent.CapDiscountMul.class).toArray(new IHandler[0]);
-        for (IHandler handler : handlers) {
-            handler.handle(event);
+        List<IHandler> handlers = getHandlers(CapInfoEvent.CapDiscountMul.class);
+        if (handlers != null && !handlers.isEmpty()) {
+            for (IHandler handler : handlers) {
+                handler.handle(event);
+            }
         }
         return event.getModifier();
     }
 
     public static float addingSpecialDiscountModifiers(CapInfoEvent.SpecialDiscountAdding event) {
-        IHandler[] handlers = instance.manager.get(CapInfoEvent.SpecialDiscountAdding.class).toArray(new IHandler[0]);
-        for (IHandler handler : handlers) {
-            handler.handle(event);
+        List<IHandler> handlers = getHandlers(CapInfoEvent.SpecialDiscountAdding.class);
+        if (handlers != null && !handlers.isEmpty()) {
+            for (IHandler handler : handlers) {
+                handler.handle(event);
+            }
         }
         return event.getModifier();
     }
 
     public static float multiplySpecialDiscountModifiers(CapInfoEvent.SpecialDiscountMul event) {
-        IHandler[] handlers = instance.manager.get(CapInfoEvent.SpecialDiscountMul.class).toArray(new IHandler[0]);
-        for (IHandler handler : handlers) {
-            handler.handle(event);
+        List<IHandler> handlers = getHandlers(CapInfoEvent.SpecialDiscountMul.class);
+        if (handlers != null && !handlers.isEmpty()) {
+            for (IHandler handler : handlers) {
+                handler.handle(event);
+            }
         }
         return event.getModifier();
     }

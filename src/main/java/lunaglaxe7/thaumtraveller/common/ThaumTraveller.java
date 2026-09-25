@@ -13,7 +13,9 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 import lunaglaxe7.thaumtraveller.Config;
+import lunaglaxe7.thaumtraveller.client.block.TTRBlocks;
 import lunaglaxe7.thaumtraveller.compat.Compat;
 import lunaglaxe7.thaumtraveller.compat.CompatItems;
 import lunaglaxe7.thaumtraveller.items.ItemNugget;
@@ -45,6 +47,8 @@ public class ThaumTraveller {
         Config.configurate(event.getSuggestedConfigurationFile());
         BaubleExpandedSlots.tryAssignSlotOfType(BaubleExpandedSlots.beltType);
         // Compat.initiate();
+        TTRBlocks.registerBlocks();
+        GameRegistry.registerTileEntity(TileForge.class, "ttr_forge_tile");
         ItemNugget.addNuggets();
         TTRItems.itemRegister(event);
         TravelAspects.initAspects();
