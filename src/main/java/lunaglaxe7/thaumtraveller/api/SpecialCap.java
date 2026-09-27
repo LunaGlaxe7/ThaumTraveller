@@ -12,8 +12,6 @@ import net.minecraft.util.ResourceLocation;
 
 import lunaglaxe7.thaumtraveller.api.util.WandHelper;
 import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
-import lunaglaxe7.thaumtraveller.common.event.CapInfoEvent;
-import lunaglaxe7.thaumtraveller.libs.TravelEventManager;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.wands.WandCap;
 
@@ -91,9 +89,7 @@ public class SpecialCap extends WandCap {
 
     @Override
     public int getCraftCost() {
-        int cost = diff ? (WandHelper.getCapCost(cap1) + WandHelper.getCapCost(cap2)) / 2 : WandHelper.getCapCost(cap);
-        // resolve modifiers
-        return cost / TravelEventManager.capCostModifiers(new CapInfoEvent.CapCraftCost(this));
+        return diff ? (WandHelper.getCapCost(cap1) + WandHelper.getCapCost(cap2)) / 2 : WandHelper.getCapCost(cap);
     }
 
     public boolean isDiff() {
@@ -118,10 +114,7 @@ public class SpecialCap extends WandCap {
 
     @Override
     public float getBaseCostModifier() {
-        float origin = this.discount;
-        origin = origin + TravelEventManager.addingDiscountModifiers(new CapInfoEvent.CapDiscountAdding(this));
-        origin = origin * TravelEventManager.multiplyDiscountModifiers(new CapInfoEvent.CapDiscountMul(this));
-        return origin;
+        return this.discount;
     }
 
     @Override
@@ -139,12 +132,7 @@ public class SpecialCap extends WandCap {
     }
 
     public float getSpecialCostModifier(Aspect a) {
-        float origin = specialDiscount.get(a.getTag());
-        float baseModi = (origin + TravelEventManager.addingDiscountModifiers(new CapInfoEvent.CapDiscountAdding(this)))
-                * TravelEventManager.multiplyDiscountModifiers(new CapInfoEvent.CapDiscountMul(this));
-        return (baseModi
-                + TravelEventManager.addingSpecialDiscountModifiers(new CapInfoEvent.SpecialDiscountAdding(this, a)))
-                * TravelEventManager.multiplySpecialDiscountModifiers(new CapInfoEvent.SpecialDiscountMul(this, a));
+        return specialDiscount.get(a.getTag());
     }
 
     @Override

@@ -1,14 +1,21 @@
 package lunaglaxe7.thaumtraveller.api;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ChatComponentTranslation;
 
 import lunaglaxe7.thaumtraveller.api.util.AspectHelper;
+import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
 import thaumcraft.api.aspects.Aspect;
 
 public class BodyEssence {
@@ -57,11 +64,14 @@ public class BodyEssence {
                         Aspect b = as[j];
                         Aspect res = mix(a, b);
                         if (res != null) {
-                            double c = Math.min(al.getAmount(a), al.getAmount(b));
-                            al.remove(a, c);
-                            al.remove(b, c);
-                            al.add(res, c);
-                            changed = true;
+                            int c = (int) Math.min(al.getAmount(a), al.getAmount(b));
+                            // mixed only when count >= 1
+                            if (c > 0) {
+                                al.remove(a, c);
+                                al.remove(b, c);
+                                al.add(res, c);
+                                changed = true;
+                            }
                         }
                     }
                 }
@@ -132,6 +142,92 @@ public class BodyEssence {
 
     public AspectList getAspects(String player) {
         return bodyEssence.computeIfAbsent(player, k -> new AspectList());
+    }
+
+    public void clearPlayer(String id) {
+        bodyEssence.remove(id);
+        bodyEssencePrimal.remove(id);
+    }
+
+    public static class BodyEssenceCommand extends CommandBase {
+
+        private List<String> aliases = new ArrayList<>();
+
+        public BodyEssenceCommand() {
+            this.aliases.add("bodyessence");
+            this.aliases.add("be");
+            this.aliases.add("bodyes");
+        }
+
+        @Override
+        public List<String> getCommandAliases() {
+            return this.aliases;
+        }
+
+        @Override
+        public String getCommandName() {
+            return "bodyessence";
+        }
+
+        @Override
+        public String getCommandUsage(ICommandSender sender) {
+            return "/bodyessence <action> [<player> [<params>]]";
+        }
+
+        @Override
+        public boolean canCommandSenderUseCommand(ICommandSender sender) {
+            return true;
+        }
+
+        @Override
+        public void processCommand(ICommandSender sender, String[] args) {
+            if (args.length == 0) {
+                sender.addChatMessage(new ChatComponentTranslation("Invalid arguments", new Object[0]));
+            } else {
+                if (args[0].equalsIgnoreCase("clear")) {
+                    if (!sender.canCommandSenderUseCommand(2, this.getCommandName())) {
+                        sender.addChatMessage(new ChatComponentTranslation("Only admin can clear body essence"));
+                    } else {
+                        EntityPlayerMP player;
+                        try {
+                            player = getPlayer(sender, args[1]);
+                            String id = player.getUniqueID().toString();
+                            ThaumTraveller.proxy.getBodyEssence().clearPlayer(id);
+                            sender.addChatMessage(
+                                    new ChatComponentTranslation(args[1] + "'s body essence has been cleared!"));
+                        } catch (Exception e) {
+                            sender.addChatMessage(new ChatComponentTranslation("No such player exists!"));
+                        }
+                    }
+                    return;
+                }
+                if (args[0].equalsIgnoreCase("view")) {
+                    EntityPlayerMP player;
+                    try {
+                        player = getPlayer(sender, args[1]);
+                        String id = player.getUniqueID().toString();
+                        AspectList essence = ThaumTraveller.proxy.getBodyEssence().getAspects(id);
+                        AspectList primal = ThaumTraveller.proxy.getBodyEssence().getAspectsPrimal(id);
+                        sender.addChatMessage(new ChatComponentTranslation("your body essence is:"));
+                        if (essence.size() > 0) {
+                            for (Aspect a : essence.getAspects()) {
+                                sender.addChatMessage(
+                                        new ChatComponentTranslation(a.getTag() + ": " + essence.getAmount(a)));
+                            }
+                            sender.addChatMessage(new ChatComponentTranslation("for primal aspects:"));
+                            for (Aspect a : primal.getAspects()) {
+                                sender.addChatMessage(
+                                        new ChatComponentTranslation(a.getTag() + ": " + essence.getAmount(a)));
+                            }
+                        } else sender.addChatMessage(new ChatComponentTranslation("null currently"));
+                    } catch (Exception e) {
+                        sender.addChatMessage(new ChatComponentTranslation("No such player exists!"));
+                    }
+                    return;
+                }
+                sender.addChatMessage(new ChatComponentTranslation("Invalid arguments"));
+            }
+        }
     }
 
 }

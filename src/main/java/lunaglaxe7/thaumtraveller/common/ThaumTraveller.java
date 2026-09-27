@@ -13,8 +13,10 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import lunaglaxe7.thaumtraveller.Config;
+import lunaglaxe7.thaumtraveller.api.BodyEssence;
 import lunaglaxe7.thaumtraveller.client.block.TTRBlocks;
 import lunaglaxe7.thaumtraveller.compat.Compat;
 import lunaglaxe7.thaumtraveller.compat.CompatItems;
@@ -91,5 +93,10 @@ public class ThaumTraveller {
         // TTRResearch.addResearchTB();
         // }
         proxy.postInit(event);
+    }
+
+    @Mod.EventHandler
+    public void registerCommand(FMLServerStartingEvent event) {
+        event.registerServerCommand(new BodyEssence.BodyEssenceCommand());
     }
 }

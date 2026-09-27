@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import lunaglaxe7.thaumtraveller.api.AspectList;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -21,6 +20,7 @@ import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import lunaglaxe7.thaumtraveller.LogHandler;
+import lunaglaxe7.thaumtraveller.api.AspectList;
 import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.common.items.wands.ItemWandCasting;
@@ -62,7 +62,6 @@ public class EventHandlerBodyEssence {
         if ((event.entity instanceof IMob) && event.source.getEntity() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.source.getEntity();
             addOrdoEssence(player.getUniqueID().toString());
-//            ThaumTraveller.proxy.addEssence(player.getUniqueID().toString(),Aspect.ORDER,100000);
         }
     }
 
@@ -75,18 +74,17 @@ public class EventHandlerBodyEssence {
             double amount = list.getAmount(Aspect.ORDER);
             if (amount > 500) {
                 IInventory inv = player.inventory;
-                int times = (int)((amount - 500) / 400);
+                int times = (int) ((amount - 500) / 400);
                 for (int i = 0; i < inv.getSizeInventory(); i++) {
                     if (inv.getStackInSlot(i) != null && (inv.getStackInSlot(i).getItem() instanceof ItemWandCasting)) {
                         ItemStack wand = inv.getStackInSlot(i);
                         for (Aspect a : Aspect.getPrimalAspects())
-                            ((ItemWandCasting) wand.getItem()).addRealVis(wand, a, 1+times, true);
+                            ((ItemWandCasting) wand.getItem()).addRealVis(wand, a, 1 + times, true);
                     }
                 }
             }
         }
     }
-
 
     @SubscribeEvent
     public void damageEssence(LivingHurtEvent event) {
@@ -145,23 +143,23 @@ public class EventHandlerBodyEssence {
         LogHandler.log(Level.INFO, "your body essence now :\n" + data.toString());
     }
 
-    public void readEssenceNBT(NBTTagCompound nbt, String id){
-        ThaumTraveller.proxy.getBodyEssence().readNBTEssence(nbt,id);
+    public void readEssenceNBT(NBTTagCompound nbt, String id) {
+        ThaumTraveller.proxy.getBodyEssence().readNBTEssence(nbt, id);
     }
 
-    public NBTTagCompound writeEssenceNBT(String id){
+    public NBTTagCompound writeEssenceNBT(String id) {
         return ThaumTraveller.proxy.getBodyEssence().writeNBTEssence(id);
     }
 
-    public void addEssence(String player, Aspect a){
-        ThaumTraveller.proxy.getBodyEssence().addAspect(player,a);
+    public void addEssence(String player, Aspect a) {
+        ThaumTraveller.proxy.getBodyEssence().addAspect(player, a);
     }
 
     private AspectList getEssencePrimal(String id) {
         return ThaumTraveller.proxy.getBodyEssence().getAspectsPrimal(id);
     }
 
-    public AspectList getEssence(String id){
+    public AspectList getEssence(String id) {
         return ThaumTraveller.proxy.getBodyEssence().getAspects(id);
     }
 }
