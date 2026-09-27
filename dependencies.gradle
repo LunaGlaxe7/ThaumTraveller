@@ -28,6 +28,7 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:ThaumicTinkerer:2.12.0:dev'){transitive=false}
     compileOnly('com.github.GTNewHorizons:ThaumicHorizons:1.8.10:dev'){transitive=false}
     compileOnly('com.github.GTNewHorizons:thaumicinsurgence:0.4.1:dev'){transitive=false}
+    compileOnly('com.github.GTNewHorizons:WitchingGadgets:1.8.51-GTNH:dev'){transitive=false}
 
     // For testing purposes
     //runtimeOnlyNonPublishable("com.github.GTNewHorizons:Electro-Magic-Tools:1.7.24:dev")

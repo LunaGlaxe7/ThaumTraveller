@@ -4,9 +4,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -17,6 +22,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import lunaglaxe7.thaumtraveller.LogHandler;
 import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
 import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
+import thaumcraft.common.items.wands.ItemWandCasting;
 
 public class EventHandlerBodyEssence {
 
@@ -48,6 +55,34 @@ public class EventHandlerBodyEssence {
 
     private void addPerEssence(String player) {
         ThaumTraveller.proxy.addEssence(player, Aspect.ENTROPY);
+    }
+
+    @SubscribeEvent
+    public void killEnemyEssence(LivingDeathEvent event) {
+        if ((event.entity instanceof IMob) && event.source.getEntity() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.source.getEntity();
+            addOrdoEssence(player.getUniqueID().toString());
+        }
+    }
+
+    @SubscribeEvent
+    public void orderEssenceEnough(LivingEvent.LivingUpdateEvent event) {
+        if (event.entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.entity;
+            String id = player.getUniqueID().toString();
+            AspectList list = ThaumTraveller.proxy.getEssence(id);
+            double amount = list.getAmount(Aspect.ORDER);
+            if (amount / 100 > 500) {
+                IInventory inv = player.inventory;
+                for (int i = 0; i < inv.getSizeInventory(); i++) {
+                    if (inv.getStackInSlot(i) != null && (inv.getStackInSlot(i).getItem() instanceof ItemWandCasting)) {
+                        ItemStack wand = inv.getStackInSlot(i);
+                        for (Aspect a : Aspect.getPrimalAspects())
+                            ((ItemWandCasting) wand.getItem()).addRealVis(wand, a, 1, true);
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent

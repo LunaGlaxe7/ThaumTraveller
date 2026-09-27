@@ -3,6 +3,11 @@ tc.aspect.navigatio=航天,遨游宇宙
 tc.aspect.pulchritudo=美感,美
 tc.aspect.temptationem=诱惑,引诱
 
+tc.aspect.help.navigatio=航天器
+#还没有实装到物品上
+#tc.aspect.help.pulchritudo=
+#tc.aspect.help.temptationem=
+
 #Items
 item.nuggetMeteoricIron.name=§9陨铁粒
 #item.ItemManaBeanaer.name=魔豆-Aer

@@ -28,8 +28,9 @@ public class BodyEssence {
         checkMix(player);
     }
 
+    // the amount is similar to the wand, 100 point = 1 vis
     public void addAspect(String player, Aspect aspect) {
-        this.addAspect(player, aspect, 1);
+        this.addAspect(player, aspect, 100);
     }
 
     public boolean canMix(Aspect a, Aspect b) {
@@ -74,6 +75,7 @@ public class BodyEssence {
         AspectList list = new AspectList();
         if (nbt.hasKey("ttr.essence")) {
             list = readNBTAspects(nbt.getTagList("ttr.essence", 10));
+            // type 10 = compound
         }
         bodyEssence.put(player, list);
 
