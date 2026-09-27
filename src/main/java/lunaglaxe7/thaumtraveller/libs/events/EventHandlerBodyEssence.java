@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import lunaglaxe7.thaumtraveller.api.AspectList;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -22,7 +23,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import lunaglaxe7.thaumtraveller.LogHandler;
 import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
 import thaumcraft.common.items.wands.ItemWandCasting;
 
 public class EventHandlerBodyEssence {
@@ -34,27 +34,27 @@ public class EventHandlerBodyEssence {
     }
 
     private void addAerEssence(String player) {
-        ThaumTraveller.proxy.addEssence(player, Aspect.AIR);
+        addEssence(player, Aspect.AIR);
     }
 
     private void addEarthEssence(String player) {
-        ThaumTraveller.proxy.addEssence(player, Aspect.EARTH);
+        addEssence(player, Aspect.EARTH);
     }
 
     private void addAquaEssence(String player) {
-        ThaumTraveller.proxy.addEssence(player, Aspect.WATER);
+        addEssence(player, Aspect.WATER);
     }
 
     private void addOrdoEssence(String player) {
-        ThaumTraveller.proxy.addEssence(player, Aspect.ORDER);
+        addEssence(player, Aspect.ORDER);
     }
 
     private void addIgnEssence(String player) {
-        ThaumTraveller.proxy.addEssence(player, Aspect.FIRE);
+        addEssence(player, Aspect.FIRE);
     }
 
     private void addPerEssence(String player) {
-        ThaumTraveller.proxy.addEssence(player, Aspect.ENTROPY);
+        addEssence(player, Aspect.ENTROPY);
     }
 
     @SubscribeEvent
@@ -62,6 +62,7 @@ public class EventHandlerBodyEssence {
         if ((event.entity instanceof IMob) && event.source.getEntity() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.source.getEntity();
             addOrdoEssence(player.getUniqueID().toString());
+//            ThaumTraveller.proxy.addEssence(player.getUniqueID().toString(),Aspect.ORDER,100000);
         }
     }
 
@@ -70,20 +71,22 @@ public class EventHandlerBodyEssence {
         if (event.entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.entity;
             String id = player.getUniqueID().toString();
-            AspectList list = ThaumTraveller.proxy.getEssence(id);
+            AspectList list = getEssencePrimal(id);
             double amount = list.getAmount(Aspect.ORDER);
-            if (amount / 100 > 500) {
+            if (amount > 500) {
                 IInventory inv = player.inventory;
+                int times = (int)((amount - 500) / 400);
                 for (int i = 0; i < inv.getSizeInventory(); i++) {
                     if (inv.getStackInSlot(i) != null && (inv.getStackInSlot(i).getItem() instanceof ItemWandCasting)) {
                         ItemStack wand = inv.getStackInSlot(i);
                         for (Aspect a : Aspect.getPrimalAspects())
-                            ((ItemWandCasting) wand.getItem()).addRealVis(wand, a, 1, true);
+                            ((ItemWandCasting) wand.getItem()).addRealVis(wand, a, 1+times, true);
                     }
                 }
             }
         }
     }
+
 
     @SubscribeEvent
     public void damageEssence(LivingHurtEvent event) {
@@ -114,7 +117,7 @@ public class EventHandlerBodyEssence {
             data = CompressedStreamTools.readCompressed(in);
             in.close();
 
-            ThaumTraveller.proxy.readEssenceNBT(data, id);
+            readEssenceNBT(data, id);
             LogHandler.log(Level.INFO, "Now body essence loaded.");
         } catch (Exception e) {
             LogHandler.log(Level.WARN, "Load body essence failed");
@@ -126,7 +129,7 @@ public class EventHandlerBodyEssence {
     public void saveEssence(PlayerEvent.SaveToFile event) {
         File file = event.getPlayerFile("ttr");
         String id = event.playerUUID;
-        NBTTagCompound data = ThaumTraveller.proxy.writeEssenceNBT(id);
+        NBTTagCompound data = writeEssenceNBT(id);
 
         if (file != null) try {
             FileOutputStream out = new FileOutputStream(file);
@@ -140,5 +143,25 @@ public class EventHandlerBodyEssence {
             } catch (Exception e1) {}
         }
         LogHandler.log(Level.INFO, "your body essence now :\n" + data.toString());
+    }
+
+    public void readEssenceNBT(NBTTagCompound nbt, String id){
+        ThaumTraveller.proxy.getBodyEssence().readNBTEssence(nbt,id);
+    }
+
+    public NBTTagCompound writeEssenceNBT(String id){
+        return ThaumTraveller.proxy.getBodyEssence().writeNBTEssence(id);
+    }
+
+    public void addEssence(String player, Aspect a){
+        ThaumTraveller.proxy.getBodyEssence().addAspect(player,a);
+    }
+
+    private AspectList getEssencePrimal(String id) {
+        return ThaumTraveller.proxy.getBodyEssence().getAspectsPrimal(id);
+    }
+
+    public AspectList getEssence(String id){
+        return ThaumTraveller.proxy.getBodyEssence().getAspects(id);
     }
 }

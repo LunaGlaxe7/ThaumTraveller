@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagList;
 
 import lunaglaxe7.thaumtraveller.api.util.AspectHelper;
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
 
 public class BodyEssence {
 
@@ -20,7 +19,7 @@ public class BodyEssence {
     // 身之源质只能自然获得元始要素
     // BodyEssence can only get primal aspects by nature
     // Just converse a player UUID string here
-    public void addAspect(String player, Aspect aspect, int count) {
+    public void addAspect(String player, Aspect aspect, double count) {
         bodyEssencePrimal.computeIfAbsent(player, k -> new AspectList()).add(aspect, count);
 
         bodyEssence.computeIfAbsent(player, k -> new AspectList()).add(aspect, count);
@@ -28,9 +27,8 @@ public class BodyEssence {
         checkMix(player);
     }
 
-    // the amount is similar to the wand, 100 point = 1 vis
     public void addAspect(String player, Aspect aspect) {
-        this.addAspect(player, aspect, 100);
+        this.addAspect(player, aspect, 1);
     }
 
     public boolean canMix(Aspect a, Aspect b) {
@@ -59,7 +57,7 @@ public class BodyEssence {
                         Aspect b = as[j];
                         Aspect res = mix(a, b);
                         if (res != null) {
-                            int c = Math.min(al.getAmount(a), al.getAmount(b));
+                            double c = Math.min(al.getAmount(a), al.getAmount(b));
                             al.remove(a, c);
                             al.remove(b, c);
                             al.add(res, c);
@@ -90,12 +88,12 @@ public class BodyEssence {
         AspectList al = new AspectList();
         if (list != null) {
             Aspect a = null;
-            int c = 0;
+            double c = 0;
             for (int i = 0; i < list.tagCount(); i++) {
                 NBTTagCompound nbt = list.getCompoundTagAt(i);
                 if (nbt.hasKey("tag")) {
                     a = Aspect.getAspect(nbt.getString("tag"));
-                    c = nbt.getInteger("amount");
+                    c = nbt.getDouble("amount");
                     al.add(a, c);
                 }
             }
@@ -116,7 +114,7 @@ public class BodyEssence {
             for (Aspect a : list.getAspects()) {
                 NBTTagCompound c = new NBTTagCompound();
                 c.setString("tag", a.getTag());
-                c.setInteger("amount", list.getAmount(a));
+                c.setDouble("amount", list.getAmount(a));
                 nbt.appendTag(c);
             }
         }

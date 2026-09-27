@@ -1,5 +1,6 @@
 package lunaglaxe7.thaumtraveller.common;
 
+import lunaglaxe7.thaumtraveller.api.AspectList;
 import net.minecraft.nbt.NBTTagCompound;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -9,7 +10,6 @@ import lunaglaxe7.thaumtraveller.api.BodyEssence;
 import lunaglaxe7.thaumtraveller.api.util.AspectHelper;
 import lunaglaxe7.thaumtraveller.libs.WandPartCache;
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
 
 public class CommonProxy {
 
@@ -24,26 +24,6 @@ public class CommonProxy {
     public void postInit(FMLPostInitializationEvent event) {
         AspectHelper.init();
         wandPartCache.registerAllNormalSpecialCaps();
-    }
-
-    public AspectList getEssence(String player) {
-        return bodyEssence.getAspects(player);
-    }
-
-    public AspectList getEssencePrimal(String player) {
-        return bodyEssence.getAspectsPrimal(player);
-    }
-
-    public void addEssence(String player, Aspect aspect) {
-        bodyEssence.addAspect(player, aspect);
-    }
-
-    public NBTTagCompound writeEssenceNBT(String player) {
-        return bodyEssence.writeNBTEssence(player);
-    }
-
-    public void readEssenceNBT(NBTTagCompound nbt, String player) {
-        bodyEssence.readNBTEssence(nbt, player);
     }
 
     public BodyEssence getBodyEssence() {
