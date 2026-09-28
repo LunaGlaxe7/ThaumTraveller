@@ -53,6 +53,10 @@ public class WandHelper {
         return ThaumTraveller.proxy.wandPartCache.getSpecialCap(wand);
     }
 
+    public static SpecialCap getSpecialCapFromCap(ItemStack cap) {
+        return ThaumTraveller.proxy.wandPartCache.getSpecialCapFromCap(cap);
+    }
+
     public static WandCap getCap(ItemStack cap) {
         if (cap != null && ThaumTraveller.proxy.wandPartCache.hasCap(cap)) {
             return WandCap.caps.get(ThaumTraveller.proxy.wandPartCache.getCapTag(cap));

@@ -1,5 +1,6 @@
 package lunaglaxe7.thaumtraveller.libs;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.Level;
 
 import lunaglaxe7.thaumtraveller.LogHandler;
 import lunaglaxe7.thaumtraveller.api.SpecialCap;
+import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.wands.WandCap;
 
 public class WandPartCache {
@@ -24,6 +26,16 @@ public class WandPartCache {
     public void registerAllNormalSpecialCaps() {
         Map<String, WandCap> wandCap = WandCap.caps;
         String[] tags = caps.values().toArray(new String[0]);
+
+        // to be used on caps with upgrade but not diff
+        registerSpecialValinaCaps();
+        for (String tag : tags) {
+            if (specialCaps.containsKey(tag)) continue;
+            SpecialCap s = SpecialCap.build(wandCap.get(tag).getItem());
+            LogHandler.info(s.getTag() + " cap normal registed");
+        }
+        LogHandler.info("all normal special caps registed");
+
         for (int i = 0; i < tags.length; i++) {
             // now cache is half of origin
             for (int j = i + 1; j < tags.length; j++) {
@@ -32,12 +44,46 @@ public class WandPartCache {
             }
         }
         LogHandler.info("all mismatched special caps registed");
-        // to be used on caps with upgrade but not diff
-        for (String tag : tags) {
-            SpecialCap s = SpecialCap.build(wandCap.get(tag).getItem());
-            LogHandler.info(s.getTag() + "cap normal registed");
-        }
-        LogHandler.info("all normal special caps registed");
+
+    }
+
+    public void registerSpecialValinaCaps() {
+        SpecialCap iron = new SpecialCap(
+                "iron",
+                WandCap.caps.get("iron").getItem(),
+                1,
+                1.1f,
+                Arrays.asList(Aspect.EARTH),
+                1);
+        LogHandler.info(iron.getTag() + " cap normal registed");
+
+        SpecialCap gold = new SpecialCap(
+                "gold",
+                WandCap.caps.get("gold").getItem(),
+                3,
+                1.05f,
+                Arrays.asList(Aspect.WATER),
+                0.95f);
+        LogHandler.info(gold.getTag() + " cap normal registed");
+
+        SpecialCap thaumium = new SpecialCap(
+                "thaumium",
+                WandCap.caps.get("thaumium").getItem(),
+                6,
+                0.92f,
+                Arrays.asList(Aspect.EARTH),
+                0.82f);
+        LogHandler.info(thaumium.getTag() + " cap normal registed");
+
+        SpecialCap voiD = new SpecialCap(
+                "void",
+                WandCap.caps.get("void").getItem(),
+                9,
+                0.85f,
+                Arrays.asList(Aspect.AIR, Aspect.ENTROPY),
+                0.73f);
+        LogHandler.info(voiD.getTag() + " cap normal registed");
+
     }
 
     public void registerSpecialCap(SpecialCap cap) {

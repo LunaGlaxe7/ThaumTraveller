@@ -27,34 +27,52 @@ import thaumcraft.common.items.wands.ItemWandCasting;
 
 public class EventHandlerBodyEssence {
 
-    private float slowProbability = 0.1f;
-
-    private float randFloat(EntityPlayer player) {
-        return player.getEntityWorld().rand.nextFloat();
-    }
-
     private void addAerEssence(String player) {
         addEssence(player, Aspect.AIR);
+    }
+
+    private void addAerEssence(String player, double amount) {
+        addEssence(player, Aspect.AIR, amount);
     }
 
     private void addEarthEssence(String player) {
         addEssence(player, Aspect.EARTH);
     }
 
+    private void addEarthEssence(String player, double amount) {
+        addEssence(player, Aspect.EARTH, amount);
+    }
+
     private void addAquaEssence(String player) {
         addEssence(player, Aspect.WATER);
+    }
+
+    private void addAquaEssence(String player, double amount) {
+        addEssence(player, Aspect.WATER, amount);
     }
 
     private void addOrdoEssence(String player) {
         addEssence(player, Aspect.ORDER);
     }
 
+    private void addOrdoEssence(String player, double amount) {
+        addEssence(player, Aspect.ORDER, amount);
+    }
+
     private void addIgnEssence(String player) {
         addEssence(player, Aspect.FIRE);
     }
 
+    private void addIgnEssence(String player, double amount) {
+        addEssence(player, Aspect.FIRE, amount);
+    }
+
     private void addPerEssence(String player) {
         addEssence(player, Aspect.ENTROPY);
+    }
+
+    private void addPerEssence(String player, double amount) {
+        addEssence(player, Aspect.ENTROPY, amount);
     }
 
     @SubscribeEvent
@@ -91,9 +109,8 @@ public class EventHandlerBodyEssence {
         if (event.entity instanceof EntityPlayer) {
             String id = event.entity.getUniqueID().toString();
             addEarthEssence(id);
-            if (event.source.isExplosion()) addEarthEssence(id);
-            if (event.source.isFireDamage() && (randFloat((EntityPlayer) event.entity) < slowProbability))
-                addIgnEssence(id);
+            if (event.source.isExplosion()) addEarthEssence(id);// seems not work
+            if (event.source.isFireDamage()) addIgnEssence(id, 0.05d);
         }
     }
 
@@ -109,7 +126,7 @@ public class EventHandlerBodyEssence {
         ThaumTraveller.proxy.getBodyEssence().clear();
         File file = event.getPlayerFile("ttr");
         String id = event.playerUUID;
-        NBTTagCompound data = new NBTTagCompound();
+        NBTTagCompound data;
         if (file != null && file.exists()) try {
             FileInputStream in = new FileInputStream(file);
             data = CompressedStreamTools.readCompressed(in);
@@ -149,6 +166,10 @@ public class EventHandlerBodyEssence {
 
     public NBTTagCompound writeEssenceNBT(String id) {
         return ThaumTraveller.proxy.getBodyEssence().writeNBTEssence(id);
+    }
+
+    public void addEssence(String player, Aspect a, double amount) {
+        ThaumTraveller.proxy.getBodyEssence().addAspect(player, a, amount);
     }
 
     public void addEssence(String player, Aspect a) {

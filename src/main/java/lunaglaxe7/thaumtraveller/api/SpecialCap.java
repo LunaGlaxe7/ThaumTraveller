@@ -1,10 +1,8 @@
 package lunaglaxe7.thaumtraveller.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,6 +50,25 @@ public class SpecialCap extends WandCap {
 
     public static SpecialCap build(ItemStack cap) {
         return new SpecialCap(cap, WandHelper.getCap(cap));
+    }
+
+    public SpecialCap(String tag, ItemStack cap, int craftCost, float baseDiscount, List<Aspect> specialAspects,
+            float specialDiscount) {
+        super(tag, baseDiscount, specialAspects, specialDiscount, cap, craftCost);
+        this.diff = false;
+        this.cap = cap;
+        discount = baseDiscount;
+        this.specialDiscount = new HashMap<>();
+        if (specialAspects != null) {
+            for (Aspect a : specialAspects) {
+                this.specialDiscount.put(a.getTag(), specialDiscount);
+            }
+        }
+        for (Aspect a : Aspect.getPrimalAspects()) {
+            if (this.specialDiscount.containsKey(a.getTag())) continue;
+            this.specialDiscount.put(a.getTag(), this.discount);
+        }
+        ThaumTraveller.proxy.wandPartCache.registerSpecialCap(this);
     }
 
     private SpecialCap(ItemStack cap1, ItemStack cap2, WandCap fake) {
@@ -107,8 +124,11 @@ public class SpecialCap extends WandCap {
         return new ItemStack[] { cap1, cap2 };
     }
 
+    // 只在不同cap或单一cap但没有重新设置数值时调用
     private float getCapBaseDiscount() {
-        return diff ? (WandHelper.getCapDiscount(cap1) + WandHelper.getCapDiscount(cap2)) / 2
+        return diff
+                ? (WandHelper.getSpecialCapFromCap(cap1).getBaseCostModifier()
+                        + WandHelper.getSpecialCapFromCap(cap2).getBaseCostModifier()) / 2
                 : WandHelper.getCapDiscount(cap);
     }
 
@@ -120,6 +140,7 @@ public class SpecialCap extends WandCap {
     @Override
     public float getSpecialCostModifier() {
         if (cap == null && cap1 == null && cap2 == null) return super.getSpecialCostModifier();
+        // I don't know now when this will be used
         if (!diff) {
             return super.getSpecialCostModifier();
         } else {
@@ -127,7 +148,9 @@ public class SpecialCap extends WandCap {
                 return (WandHelper.getCapSpecialDiscount(cap1) + WandHelper.getCapSpecialDiscount(cap2)) / 2f;
             } else if (WandHelper.getCapSpecialAspect(cap1) == null) {
                 return (WandHelper.getCapDiscount(cap1) + WandHelper.getCapSpecialDiscount(cap2)) / 2f;
-            } else return (WandHelper.getCapSpecialDiscount(cap1) + WandHelper.getCapDiscount(cap2)) / 2f;
+            } else if (WandHelper.getCapSpecialAspect(cap2) == null)
+                return (WandHelper.getCapSpecialDiscount(cap1) + WandHelper.getCapDiscount(cap2)) / 2f;
+            else return this.getBaseCostModifier();
         }
     }
 
@@ -137,20 +160,21 @@ public class SpecialCap extends WandCap {
 
     @Override
     public List<Aspect> getSpecialCostModifierAspects() {
-        return listSpecialDiscount(specialDiscount);
+        return Aspect.getPrimalAspects();
     }
 
-    public static List<Aspect> listSpecialDiscount(Map<String, Float> specialDiscount) {
-        if (specialDiscount != null) {
-            Set<String> tags = specialDiscount.keySet();
-            List<Aspect> out = new ArrayList<>();
-            for (String tag : tags) {
-                out.add(Aspect.getAspect(tag));
-            }
-            return out;
-        }
-        return null;
-    }
+    // deprecated for specialDiscount field contains all primal Aspects now
+    // public static List<Aspect> listSpecialDiscount(Map<String, Float> specialDiscount) {
+    // if (specialDiscount != null) {
+    // Set<String> tags = specialDiscount.keySet();
+    // List<Aspect> out = new ArrayList<>();
+    // for (String tag : tags) {
+    // out.add(Aspect.getAspect(tag));
+    // }
+    // return out;
+    // }
+    // return null;
+    // }
 
     private static Map<String, Float> buildSpecialDiscount(SpecialCap cap) {
         return cap.diff ? buildSpecialDiscountSpecial(cap) : buildSpecialDiscountNormal(cap);
@@ -174,42 +198,51 @@ public class SpecialCap extends WandCap {
     }
 
     // only used when diff
+    // not diff cache is already built so use special cap data directly
     private static Map<String, Float> buildSpecialDiscountSpecial(SpecialCap cap) {
         Map<String, Float> specialDiscount = new HashMap<>();
-        ItemStack cap1 = cap.getCaps()[0];
-        ItemStack cap2 = cap.getCaps()[1];
+        // ItemStack cap1 = cap.getCaps()[0];
+        //// ItemStack cap2 = cap.getCaps()[1];
+        // for (Aspect a : Aspect.getPrimalAspects()) {
+        // specialDiscount.put(a.getTag(), cap.discount);
+        // }
+
+        SpecialCap cap1 = WandHelper.getSpecialCapFromCap(cap.getCaps()[0]);
+        SpecialCap cap2 = WandHelper.getSpecialCapFromCap(cap.getCaps()[1]);
+
         for (Aspect a : Aspect.getPrimalAspects()) {
-            specialDiscount.put(a.getTag(), cap.discount);
-        }
-        List<Aspect> s1 = WandHelper.getCapSpecialAspect(cap1);
-        List<Aspect> s2 = WandHelper.getCapSpecialAspect(cap2);
-
-        if (s1 == null && s2 == null) return specialDiscount;
-
-        float f1 = s1 == null ? 0f : WandHelper.getCapSpecialDiscount(cap1);
-        float f2 = s2 == null ? 0f : WandHelper.getCapSpecialDiscount(cap2);
-
-        if (s1 != null) {
-            for (Aspect a : s1) {
-                if (s2 != null && s2.contains(a)) {
-                    // both caps have special discount so do average
-                    specialDiscount.put(a.getTag(), (f1 + f2) / 2f);
-                    continue;
-                }
-                // only cap1 , so f1
-                // but cap2 has base discount , so do average
-                specialDiscount.put(a.getTag(), (WandHelper.getCapDiscount(cap2) + f1) / 2f);
-            }
+            specialDiscount.put(a.getTag(), (cap1.getSpecialCostModifier(a) + cap2.getSpecialCostModifier(a)) / 2f);
         }
 
-        if (s2 != null) {
-            for (Aspect a : s2) {
-                if (s1 != null && s1.contains(a)) continue;
-                // only cap2, so f2
-                // but cap1 has base discount , so do average
-                specialDiscount.put(a.getTag(), (WandHelper.getCapDiscount(cap1) + f2) / 2f);
-            }
-        }
+        // List<Aspect> s1 = WandHelper.getCapSpecialAspect(cap1);
+        // List<Aspect> s2 = WandHelper.getCapSpecialAspect(cap2);
+        //
+        // if (s1 == null && s2 == null) return specialDiscount;
+        //
+        // float f1 = s1 == null ? 0f : WandHelper.getCapSpecialDiscount(cap1);
+        // float f2 = s2 == null ? 0f : WandHelper.getCapSpecialDiscount(cap2);
+        //
+        // if (s1 != null) {
+        // for (Aspect a : s1) {
+        // if (s2 != null && s2.contains(a)) {
+        // // both caps have special discount so do average
+        // specialDiscount.put(a.getTag(), (f1 + f2) / 2f);
+        // continue;
+        // }
+        // // only cap1 , so f1
+        // // but cap2 has base discount , so do average
+        // specialDiscount.put(a.getTag(), (WandHelper.getCapDiscount(cap2) + f1) / 2f);
+        // }
+        // }
+        //
+        // if (s2 != null) {
+        // for (Aspect a : s2) {
+        // if (s1 != null && s1.contains(a)) continue;
+        // // only cap2, so f2
+        // // but cap1 has base discount , so do average
+        // specialDiscount.put(a.getTag(), (WandHelper.getCapDiscount(cap1) + f2) / 2f);
+        // }
+        // }
 
         return specialDiscount;
     }
