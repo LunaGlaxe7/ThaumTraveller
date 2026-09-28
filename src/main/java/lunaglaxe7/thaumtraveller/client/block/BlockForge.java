@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import lunaglaxe7.thaumtraveller.common.TileForge;
+import lunaglaxe7.thaumtraveller.common.tile.TileForge;
 
 public class BlockForge extends BlockContainer {
 

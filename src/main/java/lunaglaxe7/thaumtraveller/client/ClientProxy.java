@@ -8,7 +8,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import lunaglaxe7.thaumtraveller.client.model.render.RenderForge;
 import lunaglaxe7.thaumtraveller.common.CommonProxy;
-import lunaglaxe7.thaumtraveller.common.TileForge;
+import lunaglaxe7.thaumtraveller.common.tile.TileForge;
 
 public class ClientProxy extends CommonProxy {
 

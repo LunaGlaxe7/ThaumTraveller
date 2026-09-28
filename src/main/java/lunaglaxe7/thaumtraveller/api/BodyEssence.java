@@ -217,7 +217,7 @@ public class BodyEssence {
                             sender.addChatMessage(new ChatComponentTranslation("for primal aspects:"));
                             for (Aspect a : primal.getAspects()) {
                                 sender.addChatMessage(
-                                        new ChatComponentTranslation(a.getTag() + ": " + essence.getAmount(a)));
+                                        new ChatComponentTranslation(a.getTag() + ": " + primal.getAmount(a)));
                             }
                         } else sender.addChatMessage(new ChatComponentTranslation("null currently"));
                     } catch (Exception e) {

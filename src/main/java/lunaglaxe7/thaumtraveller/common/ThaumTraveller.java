@@ -18,6 +18,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import lunaglaxe7.thaumtraveller.Config;
 import lunaglaxe7.thaumtraveller.api.BodyEssence;
 import lunaglaxe7.thaumtraveller.client.block.TTRBlocks;
+import lunaglaxe7.thaumtraveller.common.tile.TileForge;
 import lunaglaxe7.thaumtraveller.compat.Compat;
 import lunaglaxe7.thaumtraveller.compat.CompatItems;
 import lunaglaxe7.thaumtraveller.items.ItemNugget;
