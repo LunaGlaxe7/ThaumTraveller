@@ -4,11 +4,10 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 
 import org.apache.logging.log4j.Level;
 
@@ -27,24 +26,13 @@ public class WandPartCache {
         Map<String, WandCap> wandCap = WandCap.caps;
         String[] tags = caps.values().toArray(new String[0]);
 
-        // to be used on caps with upgrade but not diff
         registerSpecialValinaCaps();
         for (String tag : tags) {
             if (specialCaps.containsKey(tag)) continue;
             SpecialCap s = SpecialCap.build(wandCap.get(tag).getItem());
-            LogHandler.info(s.getTag() + " cap normal registed");
+            LogHandler.info(s.getTag() + " cap registed");
         }
-        LogHandler.info("all normal special caps registed");
-
-        for (int i = 0; i < tags.length; i++) {
-            // now cache is half of origin
-            for (int j = i + 1; j < tags.length; j++) {
-                SpecialCap s = SpecialCap.build(wandCap.get(tags[i]).getItem(), wandCap.get(tags[j]).getItem());
-                LogHandler.info(s.getTag() + " cap special registed");
-            }
-        }
-        LogHandler.info("all mismatched special caps registed");
-
+        LogHandler.info("all special caps registed");
     }
 
     public void registerSpecialValinaCaps() {
@@ -95,72 +83,44 @@ public class WandPartCache {
         }
     }
 
+    public SpecialCap getSpecialCap(String tag) {
+        return specialCaps.getOrDefault(tag, null);
+    }
+
     public SpecialCap getSpecialCapFromCap(ItemStack cap) {
         return specialCaps.getOrDefault(getCapTag(cap), null);
     }
 
-    public SpecialCap getSpecialCap(ItemStack cap1, ItemStack cap2) {
-        return getSpecialCap(getCapTag(cap1), getCapTag(cap2));
+    private void checkOldWands(ItemStack wand) {
+        if (wand.getTagCompound().hasKey("cap")) {
+            String tag = wand.getTagCompound().getString("cap");
+            wand.setTagInfo("cap1", new NBTTagString(tag));
+            wand.setTagInfo("cap2", new NBTTagString(tag));
+            wand.getTagCompound().removeTag("cap");
+        }
     }
 
-    public SpecialCap getSpecialCap(String tag1, String tag2) {
-        return specialCaps.containsKey(tag1 + "|" + tag2) ? specialCaps.get(tag1 + "|" + tag2)
-                : specialCaps.get(tag2 + "|" + tag1);
-    }
-
-    public WandCap getSpecialCap(ItemStack wand) {
+    public SpecialCap getTopSpecialCap(ItemStack wand) {
         if (wand.hasTagCompound()) {
-            String s = parseSpecialCapFromNBT(wand.getTagCompound());
-            // flipped has been resolved
-            if (s != null) {
-                if (specialCaps.containsKey(s)) {
-                    return specialCaps.get(s);
-                } else {
-                    return SpecialCap.buildFromWand(wand);
-                }
-            }
+            checkOldWands(wand);
+            String s = wand.getTagCompound().getString("cap2");
+            if (s != null && specialCaps.containsKey(s)) return specialCaps.get(s);
         }
         return null;
     }
 
-    public String parseSpecialCapFromNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey("cap")) {
-            return nbt.getString("cap");
-        }
-        if (nbt.hasKey("cap1")) {
-            // so flipped one will be thought the same as the normal one in cache
-            if (nbt.hasKey("flipped") && checkNbtByte(nbt)) return nbt.getString("cap2") + "|" + nbt.getString("cap1");
-            return nbt.getString("cap1") + "|" + nbt.getString("cap2");
+    public SpecialCap getBotSpecialCap(ItemStack wand) {
+        if (wand.hasTagCompound()) {
+            checkOldWands(wand);
+            String s = wand.getTagCompound().getString("cap1");
+            if (s != null && specialCaps.containsKey(s)) return specialCaps.get(s);
         }
         return null;
     }
 
-    // setTagInfo can't set boolean directly so
-    private boolean checkNbtByte(NBTTagCompound nbt) {
-        return nbt.getByte("flipped") == 1;
-    }
-
-    /**
-     * @return never has "#"
-     */
     public String parseSpecialCap(SpecialCap cap) {
         if (cap == null) return null;
-        if (cap.isDiff()) {
-            ItemStack[] caps = cap.getCaps();
-            String[] tags = new String[] { getCapTag(caps[0]), getCapTag(caps[1]) };
-            return tags[0] + "|" + tags[1];
-        }
         return getCapTag(cap.getCap());
-    }
-
-    // DO NOT pass a null here
-    public boolean checkFlipped(SpecialCap cap) {
-        String[] tags = cap.getTag().split(Pattern.quote("|"));
-        return checkFlipped(tags[0], tags[1]);
-    }
-
-    public boolean checkFlipped(String tag1, String tag2) {
-        return specialCaps.containsKey(tag2 + "|" + tag1);
     }
 
     public void registerCap(ItemStack cap, String tag) {

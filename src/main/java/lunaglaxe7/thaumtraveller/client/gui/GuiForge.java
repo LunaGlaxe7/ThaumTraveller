@@ -1,12 +1,14 @@
 package lunaglaxe7.thaumtraveller.client.gui;
 
-import lunaglaxe7.thaumtraveller.common.tile.TileForge;
-import lunaglaxe7.thaumtraveller.common.tile.container.ContainerForge;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
+import lunaglaxe7.thaumtraveller.common.tile.TileForge;
+import lunaglaxe7.thaumtraveller.common.tile.container.ContainerForge;
+
 public class GuiForge extends GuiContainer {
+
     private TileForge forge;
     private ItemStack stack;
     private boolean isWand;

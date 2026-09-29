@@ -1,12 +1,13 @@
 package lunaglaxe7.thaumtraveller.common;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
 import cpw.mods.fml.common.network.IGuiHandler;
 import lunaglaxe7.thaumtraveller.client.gui.GuiForge;
 import lunaglaxe7.thaumtraveller.common.tile.TileForge;
 import lunaglaxe7.thaumtraveller.common.tile.container.ContainerForge;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 public class TTRContents implements IGuiHandler {
 
@@ -25,9 +26,9 @@ public class TTRContents implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        switch (ID){
-            case GUIID_FORGE :
-                return new ContainerForge((TileForge) tile,player.inventory);
+        switch (ID) {
+            case GUIID_FORGE:
+                return new ContainerForge((TileForge) tile, player.inventory);
         }
         return null;
     }
@@ -35,7 +36,7 @@ public class TTRContents implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        switch (ID){
+        switch (ID) {
             case GUIID_FORGE:
                 return new GuiForge((TileForge) tile, player.inventory);
         }

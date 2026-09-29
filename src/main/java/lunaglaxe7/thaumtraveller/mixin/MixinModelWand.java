@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import lunaglaxe7.thaumtraveller.api.SpecialCap;
 import lunaglaxe7.thaumtraveller.api.util.WandHelper;
-import thaumcraft.api.wands.WandCap;
 import thaumcraft.client.renderers.models.gear.ModelWand;
 
 @Mixin(value = ModelWand.class, remap = false)
@@ -24,16 +23,8 @@ abstract class MixinModelWand {
                     shift = At.Shift.AFTER,
                     ordinal = 1))
     private void bindTopFirst(ItemStack wand, CallbackInfo c) {
-        WandCap cap = WandHelper.getSpecialCap(wand);
-        if (cap instanceof SpecialCap) {
-            SpecialCap s = (SpecialCap) cap;
-            if (s.isDiff()) {
-                // default caps[1] is the top
-                // when flipped, caps[0] is the top
-                WandCap capTop = WandHelper.getCap(s.getCaps()[1 - WandHelper.checkFlippedByte(wand)]);
-                Minecraft.getMinecraft().renderEngine.bindTexture(capTop.getTexture());
-            }
-        }
+        SpecialCap capTop = WandHelper.getTopSpecialCap(wand);
+        if (capTop != null) Minecraft.getMinecraft().renderEngine.bindTexture(capTop.getTexture());
     }
 
     @Inject(
@@ -44,17 +35,8 @@ abstract class MixinModelWand {
                     shift = At.Shift.BEFORE,
                     ordinal = 5))
     private void bindBottomSecond(ItemStack wand, CallbackInfo c) {
-        WandCap cap = WandHelper.getSpecialCap(wand);
-        if (cap instanceof SpecialCap) {
-            SpecialCap s = (SpecialCap) cap;
-            // s can't be null
-            if (s.isDiff()) {
-                // default caps[0] is the bottom
-                // when flipped it should be caps[1]
-                WandCap cap1 = WandHelper.getCap(s.getCaps()[WandHelper.checkFlippedByte(wand)]);
-                Minecraft.getMinecraft().renderEngine.bindTexture(cap1.getTexture());
-            }
-        }
+        SpecialCap capBot = WandHelper.getBotSpecialCap(wand);
+        if (capBot != null) Minecraft.getMinecraft().renderEngine.bindTexture(capBot.getTexture());
     }
 
 }

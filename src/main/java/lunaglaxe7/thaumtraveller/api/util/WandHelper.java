@@ -3,7 +3,7 @@ package lunaglaxe7.thaumtraveller.api.util;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagByte;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 
 import lunaglaxe7.thaumtraveller.api.SpecialCap;
@@ -19,38 +19,22 @@ public class WandHelper {
         if (rod.hasTagCompound()) wand.setTagInfo("rod#", rod.getTagCompound());
     }
 
-    public static void setFlipped(ItemStack wand, String tag1, String tag2) {
-        wand.setTagInfo("flipped", new NBTTagByte(checkFlippedByTags(tag1, tag2) ? (byte) 1 : (byte) 0));
-    }
-
-    // may be useful
-    public static int checkFlippedByte(ItemStack wand) {
-        return wand.getTagCompound().getByte("flipped");
-    }
-
-    public static boolean checkFlippedByTags(String tag1, String tag2) {
-        return ThaumTraveller.proxy.wandPartCache.checkFlipped(tag1, tag2);
-    }
-
-    public static String parseStringSpecialCap(SpecialCap cap) {
-        return ThaumTraveller.proxy.wandPartCache.parseSpecialCap(cap);
-    }
-
-    public static void setCap(ItemStack wand, ItemStack cap) {
-        wand.setTagInfo("cap", new NBTTagString(getCap(cap).getTag()));
-        if (cap.hasTagCompound()) wand.setTagInfo("cap#", cap.getTagCompound());
-    }
-
-    public static void setCapSpecial(ItemStack wand, ItemStack cap1, ItemStack cap2) {
-        wand.setTagInfo("cap1", new NBTTagString(getCap(cap1).getTag()));
+    public static void setCapsNbt(ItemStack wand, ItemStack cap1, ItemStack cap2) {
         if (cap1.hasTagCompound()) wand.setTagInfo("cap1#", cap1.getTagCompound());
-
-        wand.setTagInfo("cap2", new NBTTagString(getCap(cap2).getTag()));
         if (cap2.hasTagCompound()) wand.setTagInfo("cap2#", cap2.getTagCompound());
     }
 
-    public static WandCap getSpecialCap(ItemStack wand) {
-        return ThaumTraveller.proxy.wandPartCache.getSpecialCap(wand);
+    public static void setCaps(ItemStack wand, SpecialCap cap1, SpecialCap cap2) {
+        wand.setTagInfo("cap1", new NBTTagString(cap1.getTag()));
+        wand.setTagInfo("cap2", new NBTTagString(cap2.getTag()));
+    }
+
+    public static SpecialCap getTopSpecialCap(ItemStack wand) {
+        return ThaumTraveller.proxy.wandPartCache.getTopSpecialCap(wand);
+    }
+
+    public static SpecialCap getBotSpecialCap(ItemStack wand) {
+        return ThaumTraveller.proxy.wandPartCache.getBotSpecialCap(wand);
     }
 
     public static SpecialCap getSpecialCapFromCap(ItemStack cap) {
@@ -69,6 +53,27 @@ public class WandHelper {
             return WandRod.rods.get(ThaumTraveller.proxy.wandPartCache.getRodTag(rod));
         }
         return null;
+    }
+
+    public static float calculateDiscount(ItemStack wand, Aspect a) {
+        if (wand.hasTagCompound()) {
+            NBTTagCompound nbt = wand.getTagCompound();
+            if (nbt.hasKey("cap")) return getSpecialCap(nbt.getString("cap")).getSpecialCostModifier(a);
+            if (nbt.hasKey("cap1")) {
+                return (getSpecialCap(nbt.getString("cap1")).getSpecialCostModifier(a)
+                        + getSpecialCap(nbt.getString("cap2")).getSpecialCostModifier(a)) / 2f;
+            }
+        }
+        return 999f;
+    }
+
+    // dont pass a null here
+    public static int calculateCraftCost(SpecialCap cap1, SpecialCap cap2) {
+        return (cap1.getCraftCost() + cap2.getCraftCost()) / 2;
+    }
+
+    public static SpecialCap getSpecialCap(String tag) {
+        return ThaumTraveller.proxy.wandPartCache.getSpecialCap(tag);
     }
 
     public static int getCapCost(ItemStack cap) {
