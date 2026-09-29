@@ -1,8 +1,11 @@
 package lunaglaxe7.thaumtraveller.client.block;
 
+import lunaglaxe7.thaumtraveller.common.TTRContents;
+import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -21,6 +24,19 @@ public class BlockForge extends BlockContainer {
     protected BlockForge() {
         super(Material.iron);
     }
+
+//    @Override
+//    public boolean onBlockActivated(World worldIn, int x, int y, int z, EntityPlayer player, int side, float subX, float subY, float subZ) {
+//        if (!worldIn.isRemote){
+//            TileEntity tile = worldIn.getTileEntity(x,y,z);
+//            if (tile != null){
+//                worldIn.markBlockForUpdate(x,y,z);
+//                player.openGui(ThaumTraveller.instance, TTRContents.GUIID_FORGE,worldIn,x,y,z);
+//            }
+//        }
+//
+//        return true;
+//    }
 
     @Override
     public boolean shouldSideBeRendered(IBlockAccess worldIn, int x, int y, int z, int side) {

@@ -1,6 +1,14 @@
 package lunaglaxe7.thaumtraveller.common;
 
-public class TTRContents {
+import cpw.mods.fml.common.network.IGuiHandler;
+import lunaglaxe7.thaumtraveller.client.gui.GuiForge;
+import lunaglaxe7.thaumtraveller.common.tile.TileForge;
+import lunaglaxe7.thaumtraveller.common.tile.container.ContainerForge;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+
+public class TTRContents implements IGuiHandler {
 
     public static final String MODID = "ThaumTraveller";
     public static final String TCID = "Thaumcraft";
@@ -12,4 +20,25 @@ public class TTRContents {
 
     public static final String MISMATCHEDCAPKEY = "TTR.MISMATCHEDCAP";
 
+    public static final int GUIID_FORGE = 0;
+
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        switch (ID){
+            case GUIID_FORGE :
+                return new ContainerForge((TileForge) tile,player.inventory);
+        }
+        return null;
+    }
+
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        switch (ID){
+            case GUIID_FORGE:
+                return new GuiForge((TileForge) tile, player.inventory);
+        }
+        return null;
+    }
 }
