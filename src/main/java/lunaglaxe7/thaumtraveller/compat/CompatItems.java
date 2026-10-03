@@ -47,6 +47,9 @@ public class CompatItems {
     public static ItemStack voidSeed;
 
     public static ItemStack ironCap;
+    public static ItemStack balanceShard;
+    public static ItemStack thaumIngot;
+    public static ItemStack greatBlank;
 
     public static void importItems() {
         importTCItems();
@@ -60,6 +63,9 @@ public class CompatItems {
     @Optional.Method(modid = TTRContents.TCID)
     public static void importTCItems() {
         ironCap = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "WandCap"), 1, 0);
+        balanceShard = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "ItemShard"), 1, 6);
+        thaumIngot = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "ItemResource"), 1, 2);
+        greatBlank = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "blockWoodenDevice"), 1, 6);
     }
 
     @Optional.Method(modid = TTRContents.GCID)

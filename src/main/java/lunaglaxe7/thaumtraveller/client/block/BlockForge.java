@@ -1,8 +1,12 @@
 package lunaglaxe7.thaumtraveller.client.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -11,6 +15,8 @@ import net.minecraft.world.World;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import lunaglaxe7.thaumtraveller.common.TTRContents;
+import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
 import lunaglaxe7.thaumtraveller.common.tile.TileForge;
 
 public class BlockForge extends BlockContainer {
@@ -20,21 +26,42 @@ public class BlockForge extends BlockContainer {
 
     protected BlockForge() {
         super(Material.iron);
+        setBlockName("wand_forge");
     }
 
-    // @Override
-    // public boolean onBlockActivated(World worldIn, int x, int y, int z, EntityPlayer player, int side, float subX,
-    // float subY, float subZ) {
-    // if (!worldIn.isRemote){
-    // TileEntity tile = worldIn.getTileEntity(x,y,z);
-    // if (tile != null){
-    // worldIn.markBlockForUpdate(x,y,z);
-    // player.openGui(ThaumTraveller.instance, TTRContents.GUIID_FORGE,worldIn,x,y,z);
-    // }
-    // }
-    //
-    // return true;
-    // }
+    @Override
+    public void breakBlock(World worldIn, int x, int y, int z, Block blockBroken, int meta) {
+        if (!worldIn.isRemote) {
+            TileEntity t = worldIn.getTileEntity(x, y, z);
+            if (t instanceof TileForge) {
+                TileForge forge = (TileForge) t;
+                if (forge.item != null) {
+                    ItemStack drop = forge.item.copy();
+                    float[] r = new float[] { worldIn.rand.nextFloat() * 0.8f + 0.1f,
+                            worldIn.rand.nextFloat() * 0.8f + 0.1f, worldIn.rand.nextFloat() * 0.8f + 0.1f };
+                    EntityItem item = new EntityItem(worldIn, x + r[0], y + r[1], z + r[2], drop);
+                    item.delayBeforeCanPickup = 10;
+                    worldIn.spawnEntityInWorld(item);
+                }
+            }
+        }
+
+        super.breakBlock(worldIn, x, y, z, blockBroken, meta);
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, int x, int y, int z, EntityPlayer player, int side, float subX,
+            float subY, float subZ) {
+        if (!worldIn.isRemote) {
+            TileEntity tile = worldIn.getTileEntity(x, y, z);
+            if (tile != null) {
+                worldIn.markBlockForUpdate(x, y, z);
+                player.openGui(ThaumTraveller.instance, TTRContents.GUIID_FORGE, worldIn, x, y, z);
+            }
+        }
+
+        return true;
+    }
 
     @Override
     public boolean shouldSideBeRendered(IBlockAccess worldIn, int x, int y, int z, int side) {
@@ -73,7 +100,7 @@ public class BlockForge extends BlockContainer {
 
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister reg) {
-        this.icon = reg.registerIcon("thaumtraveller:cap_forge");
+        this.icon = reg.registerIcon("thaumtraveller:wand_forge");
     }
 
     @Override

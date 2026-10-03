@@ -16,6 +16,7 @@ public class SpecialCap extends WandCap {
     private ItemStack cap;
     private float discount;
     private Map<String, Float> specialDiscount;
+    public static SpecialCap NULL = new SpecialCap("null", null, 999, 999f, null, 999f);
 
     public static SpecialCap build(ItemStack cap) {
         return new SpecialCap(cap, WandHelper.getCap(cap));

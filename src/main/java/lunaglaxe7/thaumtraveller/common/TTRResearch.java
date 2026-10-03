@@ -9,12 +9,14 @@ import net.minecraft.util.ResourceLocation;
 
 import cpw.mods.fml.common.Optional;
 import lunaglaxe7.thaumtraveller.Config;
+import lunaglaxe7.thaumtraveller.client.block.TTRBlocks;
 import lunaglaxe7.thaumtraveller.compat.CompatItems;
 import lunaglaxe7.thaumtraveller.items.ItemNugget;
 import thaumcraft.api.ItemApi;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
+import thaumcraft.api.crafting.IArcaneRecipe;
 import thaumcraft.api.crafting.InfusionRecipe;
 import thaumcraft.api.research.ResearchCategories;
 import thaumcraft.api.research.ResearchItem;
@@ -59,10 +61,7 @@ public class TTRResearch {
                         .setPages(
                                 new ResearchPage("tc.research_page.TTR.BEANTRANS"),
                                 new ResearchPage((CrucibleRecipe) recipes.get("BeanTrans")))
-                        .setConcealed().setItemTriggers(ItemApi.getItem("itemManaBean", 0)) // now the research will be
-                                                                                            // unlocked after
-                                                                                            // scan the manabean
-                        .registerResearchItem();
+                        .setConcealed().setItemTriggers(ItemApi.getItem("itemManaBean", 0)).registerResearchItem();
 
         new ResearchItem(
                 TTRContents.MISMATCHEDCAPKEY,
@@ -74,6 +73,21 @@ public class TTRResearch {
                 3,
                 CompatItems.ironCap).setParents("TTR.TRAVEL", "CAP_gold")
                         .setPages(new ResearchPage("tc.research_page." + TTRContents.MISMATCHEDCAPKEY))
+                        .registerResearchItem();
+
+        new ResearchItem(
+                "TTR.WANDFORGE",
+                "TTRUniverse",
+                new AspectList().add(Aspect.ENERGY, 5).add(Aspect.MAGIC, 5).add(Aspect.MECHANISM, 5),
+                3,
+                3,
+                3,
+                new ItemStack(TTRBlocks.forge))
+                        .setParents("VISPOWER")
+                        .setPages(
+                                new ResearchPage("tc.research_page.TTR.WANDFORGE.1"),
+                                new ResearchPage((IArcaneRecipe) recipes.get("WandForge")),
+                                new ResearchPage("tc.research_page.TTR.WANDFORGE.2"))
                         .registerResearchItem();
 
     }

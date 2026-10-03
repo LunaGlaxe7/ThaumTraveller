@@ -22,6 +22,7 @@ public class TTRContents implements IGuiHandler {
     public static final String MISMATCHEDCAPKEY = "TTR.MISMATCHEDCAP";
 
     public static final int GUIID_FORGE = 0;
+    public static final String GUI_FORGE = "thaumtraveller:textures/gui/wand_forge.png";
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {

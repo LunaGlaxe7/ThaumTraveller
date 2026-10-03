@@ -8,6 +8,7 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 import lunaglaxe7.thaumtraveller.Config;
+import lunaglaxe7.thaumtraveller.client.block.TTRBlocks;
 import lunaglaxe7.thaumtraveller.compat.CompatItems;
 import lunaglaxe7.thaumtraveller.items.ItemNugget;
 import lunaglaxe7.thaumtraveller.util.ManaBeanHelper;
@@ -50,6 +51,24 @@ public class TTRRecipes {
                         ManaBeanHelper.beanWithAspect(Aspect.WATER),
                         ManaBeanHelper.beanWithAspect(Aspect.AIR),
                         new AspectList().add(Aspect.ENTROPY, 2).add(Aspect.WATER, 1)));
+        TTRResearch.recipes.put(
+                "WandForge",
+                ThaumcraftApi.addArcaneCraftingRecipe(
+                        "TTR.WANDFORGE",
+                        new ItemStack(TTRBlocks.forge),
+                        new AspectList().add(Aspect.AIR, 10).add(Aspect.FIRE, 10).add(Aspect.WATER, 10)
+                                .add(Aspect.EARTH, 10).add(Aspect.ORDER, 10).add(Aspect.ENTROPY, 10),
+                        " # ",
+                        "$%$",
+                        "&&&",
+                        '#',
+                        CompatItems.balanceShard,
+                        '$',
+                        Items.gold_ingot,
+                        '%',
+                        CompatItems.greatBlank,
+                        '&',
+                        CompatItems.thaumIngot));
     }
 
     @Optional.Method(modid = TTRContents.GCID)

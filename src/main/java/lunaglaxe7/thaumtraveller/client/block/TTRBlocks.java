@@ -9,6 +9,6 @@ public class TTRBlocks {
 
     public static void registerBlocks() {
         forge = new BlockForge();
-        GameRegistry.registerBlock(forge, ItemForge.class, "block_cap_forge");
+        GameRegistry.registerBlock(forge, ItemForge.class, "block_wand_forge");
     }
 }

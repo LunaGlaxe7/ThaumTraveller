@@ -8,6 +8,8 @@ import net.minecraft.nbt.NBTTagString;
 
 import lunaglaxe7.thaumtraveller.api.SpecialCap;
 import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
+import lunaglaxe7.thaumtraveller.common.event.CapInfoEvent;
+import lunaglaxe7.thaumtraveller.common.event.TravelEventManager;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.wands.WandCap;
 import thaumcraft.api.wands.WandRod;
@@ -29,12 +31,20 @@ public class WandHelper {
         wand.setTagInfo("cap2", new NBTTagString(cap2.getTag()));
     }
 
+    public static ItemStack getTopCapItem(ItemStack wand) {
+        return ThaumTraveller.proxy.wandPartCache.getCapItemFromWand(wand, 2);
+    }
+
+    public static ItemStack getBotCapItem(ItemStack wand) {
+        return ThaumTraveller.proxy.wandPartCache.getCapItemFromWand(wand, 1);
+    }
+
     public static SpecialCap getTopSpecialCap(ItemStack wand) {
-        return ThaumTraveller.proxy.wandPartCache.getTopSpecialCap(wand);
+        return ThaumTraveller.proxy.wandPartCache.getSpecialCapFromWand(wand, 2);
     }
 
     public static SpecialCap getBotSpecialCap(ItemStack wand) {
-        return ThaumTraveller.proxy.wandPartCache.getBotSpecialCap(wand);
+        return ThaumTraveller.proxy.wandPartCache.getSpecialCapFromWand(wand, 1);
     }
 
     public static SpecialCap getSpecialCapFromCap(ItemStack cap) {
@@ -55,33 +65,42 @@ public class WandHelper {
         return null;
     }
 
+    // wand cant be not ItemWandCasting
     public static float calculateDiscount(ItemStack wand, Aspect a) {
+        float out = 999f;
         if (wand.hasTagCompound()) {
             NBTTagCompound nbt = wand.getTagCompound();
-            if (nbt.hasKey("cap")) return getSpecialCap(nbt.getString("cap")).getSpecialCostModifier(a);
+            if (!nbt.hasKey("cap") && !nbt.hasKey("cap1")) out = getSpecialCap("iron").getSpecialCostModifier(a);
+            if (nbt.hasKey("cap")) out = getSpecialCap(nbt.getString("cap")).getSpecialCostModifier(a);
             if (nbt.hasKey("cap1")) {
-                return (getSpecialCap(nbt.getString("cap1")).getSpecialCostModifier(a)
-                        + getSpecialCap(nbt.getString("cap2")).getSpecialCostModifier(a)) / 2f;
+                out = (getSpecialCap(nbt.getString("cap1")).getSpecialCostModifier(a)
+                        * TravelEventManager.multiplyDiscountModifiers(new CapInfoEvent.CapDiscountMul(wand, 1))
+                        * TravelEventManager
+                                .multiplySpecialDiscountModifiers(new CapInfoEvent.SpecialDiscountMul(wand, a, 1))
+                        + getSpecialCap(nbt.getString("cap2")).getSpecialCostModifier(a)
+                                * TravelEventManager.multiplyDiscountModifiers(new CapInfoEvent.CapDiscountMul(wand, 2))
+                                * TravelEventManager.multiplySpecialDiscountModifiers(
+                                        new CapInfoEvent.SpecialDiscountMul(wand, a, 2)))
+                        / 2f;
             }
         }
-        return 999f;
+        return out;
     }
 
-    // dont pass a null here
-    public static int calculateCraftCost(SpecialCap cap1, SpecialCap cap2) {
-        return (cap1.getCraftCost() + cap2.getCraftCost()) / 2;
+    public static int calculateCraftCost(ItemStack cap1, ItemStack cap2) {
+        int out = 999;
+        if (cap1 != null && cap2 != null) {
+            int c1 = getSpecialCapFromCap(cap1).getCraftCost();
+            int c2 = getSpecialCapFromCap(cap2).getCraftCost();
+            out = (int) (c1 * TravelEventManager.capCostModifiers(new CapInfoEvent.CapCraftCost(cap1))
+                    + c2 * TravelEventManager.capCostModifiers(new CapInfoEvent.CapCraftCost(cap2))) / 2;
+        }
+
+        return Math.max(out, 1);
     }
 
     public static SpecialCap getSpecialCap(String tag) {
         return ThaumTraveller.proxy.wandPartCache.getSpecialCap(tag);
-    }
-
-    public static int getCapCost(ItemStack cap) {
-        return getCap(cap) == null ? 999 : getCap(cap).getCraftCost();
-    }
-
-    public static float getCapDiscount(ItemStack cap) {
-        return getCap(cap) == null ? 999f : getCap(cap).getBaseCostModifier();
     }
 
     public static float getCapSpecialDiscount(ItemStack cap) {

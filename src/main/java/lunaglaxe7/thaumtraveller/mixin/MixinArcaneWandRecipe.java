@@ -14,7 +14,7 @@ import lunaglaxe7.thaumtraveller.api.SpecialCap;
 import lunaglaxe7.thaumtraveller.api.util.WandHelper;
 import lunaglaxe7.thaumtraveller.common.TTRContents;
 import lunaglaxe7.thaumtraveller.common.ThaumTraveller;
-import lunaglaxe7.thaumtraveller.libs.WandPartCache;
+import lunaglaxe7.thaumtraveller.common.WandPartCache;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
@@ -38,7 +38,7 @@ abstract class MixinArcaneWandRecipe {
             SpecialCap cap1 = WandHelper.getSpecialCapFromCap(c1);
             SpecialCap cap2 = WandHelper.getSpecialCapFromCap(c2);
             String tagR = getCache().getRodTag(rod);
-            int costC = WandHelper.calculateCraftCost(cap1, cap2);
+            int costC = WandHelper.calculateCraftCost(c1, c2);
             int costR = WandRod.rods.get(tagR).getCraftCost();
             out = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "WandCasting"), 1, costC * costR);
             WandHelper.setCaps(out, cap1, cap2);
@@ -58,8 +58,7 @@ abstract class MixinArcaneWandRecipe {
         ItemStack rod = getStack(inv, 1, 1);
         ItemStack c2 = getStack(inv, 2, 0);
         if (checkWandTemplate(inv)) {
-            int costC = WandHelper
-                    .calculateCraftCost(WandHelper.getSpecialCapFromCap(c1), WandHelper.getSpecialCapFromCap(c2));
+            int costC = WandHelper.calculateCraftCost(c1, c2);
             int costR = WandHelper.getRod(rod).getCraftCost();
 
             int cost = costC * costR;
@@ -75,6 +74,7 @@ abstract class MixinArcaneWandRecipe {
     // now every two caps can make a wand
     private void diffCheck(ItemStack cap1, ItemStack cap2, ItemStack rod, EntityPlayer player,
             CallbackInfoReturnable<Boolean> c) {
+        boolean out = false;
         if (cap1 != null && cap2 != null && rod != null) {
             if (getCache().hasCap(cap1) && getCache().hasCap(cap2) && getCache().hasRod(rod)) {
                 String[] tag = new String[] { getCache().getCapTag(cap1), getCache().getCapTag(cap2),
@@ -87,13 +87,14 @@ abstract class MixinArcaneWandRecipe {
                         && ThaumcraftApiHelper.isResearchComplete(
                                 player.getCommandSenderName(),
                                 WandRod.rods.get(tag[2]).getResearch())) {
-                    boolean out = tag[0].equals(tag[1]) || ThaumcraftApiHelper
+                    out = tag[0].equals(tag[1]) || ThaumcraftApiHelper
                             .isResearchComplete(player.getCommandSenderName(), TTRContents.MISMATCHEDCAPKEY);
-                    c.setReturnValue(out);
-                    c.cancel();
+
                 }
             }
         }
+        c.setReturnValue(out);
+        c.cancel();
     }
 
     // 这一大截判断也太雷霆

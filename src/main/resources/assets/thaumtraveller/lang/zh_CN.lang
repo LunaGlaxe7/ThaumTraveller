@@ -17,6 +17,18 @@ item.nuggetMeteoricIron.name=§9陨铁粒
 #item.ItemManaBeanperditio.name=魔豆-Perditio
 #item.ItemManaBeanterra.name=魔豆-Terra
 item.Wand.mismatched.cap=离子
+tile.wand_forge.name=法杖锻造台
+
+#wand_forge
+ttr.forgestart=开始锻造
+utype.applied=已有升级
+utype.available=可用升级
+utype.upgrades=§9已升级
+utype.conducting.name=§5传导
+utype.conducting.desc=魔力消耗减少5%
+utype.affinity.name=§5亲和
+utype.affinity.desc=制造消耗降低20%
+
 
 #Researches
 tc.research_category.TTRUniverse=神秘使之旅

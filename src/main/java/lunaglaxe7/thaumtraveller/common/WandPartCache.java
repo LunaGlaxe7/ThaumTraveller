@@ -1,4 +1,4 @@
-package lunaglaxe7.thaumtraveller.libs;
+package lunaglaxe7.thaumtraveller.common;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 
 import org.apache.logging.log4j.Level;
@@ -57,7 +58,7 @@ public class WandPartCache {
         SpecialCap thaumium = new SpecialCap(
                 "thaumium",
                 WandCap.caps.get("thaumium").getItem(),
-                6,
+                9,
                 0.92f,
                 Arrays.asList(Aspect.EARTH),
                 0.82f);
@@ -66,7 +67,7 @@ public class WandPartCache {
         SpecialCap voiD = new SpecialCap(
                 "void",
                 WandCap.caps.get("void").getItem(),
-                9,
+                12,
                 0.85f,
                 Arrays.asList(Aspect.AIR, Aspect.ENTROPY),
                 0.73f);
@@ -76,7 +77,7 @@ public class WandPartCache {
 
     public void registerSpecialCap(SpecialCap cap) {
         if (cap != null) {
-            String s = parseSpecialCap(cap);
+            String s = cap.getTag();
             if (!specialCaps.containsKey(s)) {
                 specialCaps.put(s, cap);
             }
@@ -84,11 +85,14 @@ public class WandPartCache {
     }
 
     public SpecialCap getSpecialCap(String tag) {
-        return specialCaps.getOrDefault(tag, null);
+        return specialCaps.getOrDefault(tag, SpecialCap.NULL);
     }
 
     public SpecialCap getSpecialCapFromCap(ItemStack cap) {
-        return specialCaps.getOrDefault(getCapTag(cap), null);
+        if (getCapTag(cap) != null) {
+            return specialCaps.getOrDefault(getCapTag(cap), SpecialCap.NULL);
+        }
+        return null;
     }
 
     private void checkOldWands(ItemStack wand) {
@@ -98,29 +102,34 @@ public class WandPartCache {
             wand.setTagInfo("cap2", new NBTTagString(tag));
             wand.getTagCompound().removeTag("cap");
         }
+        if (!wand.getTagCompound().hasKey("cap") && !wand.getTagCompound().hasKey("cap1")) {
+            wand.setTagInfo("cap1", new NBTTagString("iron"));
+            wand.setTagInfo("cap2", new NBTTagString("iron"));
+        }
     }
 
-    public SpecialCap getTopSpecialCap(ItemStack wand) {
+    public SpecialCap getSpecialCapFromWand(ItemStack wand, int index) {
         if (wand.hasTagCompound()) {
             checkOldWands(wand);
-            String s = wand.getTagCompound().getString("cap2");
+            String s = wand.getTagCompound().getString(index == 1 ? "cap1" : "cap2");
             if (s != null && specialCaps.containsKey(s)) return specialCaps.get(s);
         }
-        return null;
+        return SpecialCap.NULL;
     }
 
-    public SpecialCap getBotSpecialCap(ItemStack wand) {
-        if (wand.hasTagCompound()) {
-            checkOldWands(wand);
-            String s = wand.getTagCompound().getString("cap1");
-            if (s != null && specialCaps.containsKey(s)) return specialCaps.get(s);
+    public ItemStack getCapItemFromWand(ItemStack wand, int index) {
+        ItemStack out = null;
+        SpecialCap cap = getSpecialCapFromWand(wand, index);
+        if (cap != null) {
+            out = cap.getItem().copy();
+            out.setTagInfo("tag", new NBTTagString(cap.getTag()));
+            String key = index == 1 ? "cap1#" : "cap2#";
+            if (wand.hasTagCompound() && wand.getTagCompound().hasKey(key)) {
+                NBTTagCompound nbt = wand.getTagCompound().getCompoundTag(key);
+                out.setTagInfo(key, nbt);
+            }
         }
-        return null;
-    }
-
-    public String parseSpecialCap(SpecialCap cap) {
-        if (cap == null) return null;
-        return getCapTag(cap.getCap());
+        return out;
     }
 
     public void registerCap(ItemStack cap, String tag) {

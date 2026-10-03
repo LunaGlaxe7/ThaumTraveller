@@ -1,6 +1,6 @@
 package lunaglaxe7.thaumtraveller.api;
 
-public interface IHandler {
+public interface IHandler<T extends TravelEvent> {
 
-    void handle(TravelEvent event);
+    void handle(T event);
 }

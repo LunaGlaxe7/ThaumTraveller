@@ -212,12 +212,14 @@ public class BodyEssence {
                         if (essence.size() > 0) {
                             for (Aspect a : essence.getAspects()) {
                                 sender.addChatMessage(
-                                        new ChatComponentTranslation(a.getTag() + ": " + essence.getAmount(a)));
+                                        new ChatComponentTranslation(
+                                                a.getTag() + ": " + String.format("%.3f", essence.getAmount(a))));
                             }
                             sender.addChatMessage(new ChatComponentTranslation("for primal aspects:"));
                             for (Aspect a : primal.getAspects()) {
                                 sender.addChatMessage(
-                                        new ChatComponentTranslation(a.getTag() + ": " + primal.getAmount(a)));
+                                        new ChatComponentTranslation(
+                                                a.getTag() + ": " + String.format("%.3f", primal.getAmount(a))));
                             }
                         } else sender.addChatMessage(new ChatComponentTranslation("null currently"));
                     } catch (Exception e) {

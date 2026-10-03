@@ -1,4 +1,4 @@
-package lunaglaxe7.thaumtraveller.libs.events;
+package lunaglaxe7.thaumtraveller.common.event;
 
 import java.io.File;
 import java.io.FileInputStream;
