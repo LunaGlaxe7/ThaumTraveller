@@ -18,6 +18,7 @@ import org.lwjgl.opengl.GL11;
 import lunaglaxe7.thaumtraveller.api.UType;
 import lunaglaxe7.thaumtraveller.api.util.AspectHelper;
 import lunaglaxe7.thaumtraveller.api.util.WandHelper;
+import lunaglaxe7.thaumtraveller.client.DrawHelper;
 import lunaglaxe7.thaumtraveller.client.gui.button.GuiButtonCap;
 import lunaglaxe7.thaumtraveller.client.gui.button.GuiButtonForge;
 import lunaglaxe7.thaumtraveller.common.TTRContents;
@@ -456,7 +457,6 @@ public class GuiForge extends GuiContainer {
     }
 
     private void setAspectColor(Aspect tag) {
-        Color color = new Color(tag.getColor());
-        GL11.glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1f);
+        DrawHelper.setAspectColor(tag);
     }
 }
