@@ -69,6 +69,14 @@ public class TTRRecipes {
                         CompatItems.greatBlank,
                         '&',
                         CompatItems.thaumIngot));
+
+        TTRResearch.recipes.put(
+                "SilverTree",
+                ThaumcraftApi.addCrucibleRecipe(
+                        "TTR.SILVERTREE",
+                        CompatItems.silverTree,
+                        CompatItems.greatTree,
+                        new AspectList().add(Aspect.EXCHANGE, 16).add(Aspect.POISON, 8).add(Aspect.PLANT, 16)));
     }
 
     @Optional.Method(modid = TTRContents.GCID)

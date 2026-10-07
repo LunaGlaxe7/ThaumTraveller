@@ -90,6 +90,19 @@ public class TTRResearch {
                                 new ResearchPage("tc.research_page.TTR.WANDFORGE.2"))
                         .registerResearchItem();
 
+        new ResearchItem(
+                "TTR.SILVERTREE",
+                TTRContents.TTRRESEARCHCATKEY,
+                new AspectList().add(Aspect.EXCHANGE, 1).add(Aspect.PLANT, 1).add(Aspect.POISON, 1),
+                -3,
+                -1,
+                1,
+                CompatItems.silverTree)
+                        .setPages(
+                                new ResearchPage("tc.research_page.TTR.SILVERTREE"),
+                                new ResearchPage((CrucibleRecipe) (recipes.get("SilverTree"))))
+                        .setSecondary().registerResearchItem();
+
     }
 
     @Optional.Method(modid = TTRContents.GCID)

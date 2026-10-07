@@ -50,6 +50,8 @@ public class CompatItems {
     public static ItemStack balanceShard;
     public static ItemStack thaumIngot;
     public static ItemStack greatBlank;
+    public static ItemStack silverTree;
+    public static ItemStack greatTree;
 
     public static void importItems() {
         importTCItems();
@@ -66,6 +68,8 @@ public class CompatItems {
         balanceShard = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "ItemShard"), 1, 6);
         thaumIngot = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "ItemResource"), 1, 2);
         greatBlank = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "blockWoodenDevice"), 1, 6);
+        silverTree = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "blockCustomPlant"), 1, 1);
+        greatTree = new ItemStack(GameRegistry.findItem(TTRContents.TCID, "blockCustomPlant"), 1);
     }
 
     @Optional.Method(modid = TTRContents.GCID)

@@ -20,6 +20,7 @@ public class TTRContents implements IGuiHandler {
     public static final String TBID = "thaumicbases";
 
     public static final String MISMATCHEDCAPKEY = "TTR.MISMATCHEDCAP";
+    public static final String TTRRESEARCHCATKEY = "TTRUniverse";
 
     public static final int GUIID_FORGE = 0;
     public static final String GUI_FORGE = "thaumtraveller:textures/gui/wand_forge.png";

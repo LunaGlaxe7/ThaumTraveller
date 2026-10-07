@@ -70,3 +70,7 @@ tc.research_name.TTR.WANDFORGE=法杖升级
 tc.research_text.TTR.WANDFORGE=不再那么贵
 tc.research_page.TTR.WANDFORGE.1=无法忍受杖端低下的性能后，你制造出这个装置.现在可以对你的杖端和法杖进行升级了.通过充能节点向杖端灌入灵气，你得以提升了杖端的各项性能.<BR>要注意的是，每个升级都是单独作用在对应的杖端上的，因此效果会跟看起来的不同.
 tc.research_page.TTR.WANDFORGE.2=这里是目前可以进行的升级种类.<BR>传导<BR>每次使杖端提供的魔力减免能力增加5%.<BR>亲和<BR>使杖端在制造成法杖时的消耗减少20%.
+
+tc.research_name.TTR.SILVERTREE=人工银树
+tc.research_text.TTR.SILVERTREE=只是想炼金
+tc.research_page.TTR.SILVERTREE=也许有人用得上.<BR>PS:来自在巨型生物群系里完全没找到魔法森林的作者......
