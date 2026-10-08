@@ -37,6 +37,7 @@ dependencies {
     runtimeOnlyNonPublishable('com.github.GTNewHorizons:Galacticraft:3.4.33-GTNH:dev'){transitive=false}
     runtimeOnlyNonPublishable('com.github.GTNewHorizons:TinkersConstruct:1.14.97-GTNH:dev')
     runtimeOnlyNonPublishable('com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-1054-GTNH:dev') {transitive=false}
+    runtimeOnlyNonPublishable('com.github.GTNewHorizons:ThaumicTinkerer:2.12.0:dev'){transitive=false}
 
     devOnlyNonPublishable('com.github.GTNewHorizons:AspectRecipeIndex:1.1.3:dev')
 }

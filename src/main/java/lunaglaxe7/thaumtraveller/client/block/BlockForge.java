@@ -4,12 +4,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -47,6 +49,13 @@ public class BlockForge extends BlockContainer {
         }
 
         super.breakBlock(worldIn, x, y, z, blockBroken, meta);
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, int x, int y, int z, EntityLivingBase placer, ItemStack itemIn) {
+        super.onBlockPlacedBy(worldIn, x, y, z, placer, itemIn);
+        int dir = MathHelper.floor_double(placer.rotationYaw * 4f / 360f + 0.5d) & 3;
+        worldIn.setBlockMetadataWithNotify(x, y, z, dir, 2);
     }
 
     @Override
